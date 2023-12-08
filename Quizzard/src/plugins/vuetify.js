@@ -15,12 +15,13 @@ import { createVuetify } from 'vuetify'
 export default createVuetify({
   theme: {
     themes: {
-      light: {
-        colors: {
-          primary: '#1867C0',
-          secondary: '#5CBBF6',
-        },
-      },
+      dark: {
+        primary: '#2C2929',
+        secondary: '#3E3E3E',
+        third: '#393939',
+        background: '#38393E', // If not using lighten/darken, use base to return hex
+      }
     },
+    dark: true
   },
 })
