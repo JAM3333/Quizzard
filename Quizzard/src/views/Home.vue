@@ -1,7 +1,19 @@
 <template>
-  <HomeMain />
+  <v-card title="Card title" text="..."></v-card>
 </template>
+<script>
 
-<script setup>
-  import HomeMain from '@/components/HomeMain.vue'
+
+ 
+export default {
+
+name: 'App',
+
+components: {
+},
+}
+
 </script>
+
+
+
