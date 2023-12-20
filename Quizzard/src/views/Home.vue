@@ -1,15 +1,17 @@
 <template>
-  <v-card title="Card title" text="..."></v-card>
+  <FuncTest></FuncTest>
 </template>
 <script>
 
 
- 
+import FuncTest from '../components/FuncTest.vue'
+
 export default {
 
 name: 'App',
 
 components: {
+FuncTest
 },
 }
 
