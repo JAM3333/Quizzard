@@ -15,7 +15,81 @@ import vuetify from "../plugins/vuetify.js";
           <v-file-input clearable label="File input" variant="outlined" multiple show-size @change="ReadFiles" ref="fileUpload"></v-file-input>
         </v-expansion-panel-text>
       </v-expansion-panel>
-      <v-expansion-panel title="Quiz Options"></v-expansion-panel>
+      <v-expansion-panel title="Quiz Options">
+        <v-expansion-panel-text>
+          <v-card class="pa-4 d-flex align-center">        
+
+          <span class="text-medium-emphasis ms-1 font-weight-light">
+            Quiz Difficulty
+          </span>
+
+          <v-spacer></v-spacer>
+
+
+
+        <v-btn-toggle
+          rounded="4"
+          color="deep-purple-accent-3"
+          v-model="difSelectedButton"
+          group
+          mandatory
+        >
+          <v-btn value="easy"> EASY </v-btn>
+
+          <v-btn value="medium"> MEDIUM </v-btn>
+
+          <v-btn value="difficult"> DIFFICULT </v-btn>
+        </v-btn-toggle>
+
+          </v-card>
+          <v-card class="pa-4 d-flex align-center">        
+
+          <span class="text-medium-emphasis ms-1 font-weight-light">
+            Question Count
+          </span>
+
+          <v-spacer></v-spacer>
+
+
+
+          <v-btn-toggle
+          rounded="4"
+          color="deep-purple-accent-3"
+          group
+          mandatory
+          >
+          <v-btn value="easy"> EASY </v-btn>
+
+          <v-btn value="medium"> MEDIUM </v-btn>
+
+          </v-btn-toggle>
+
+          </v-card>
+          <v-card class="pa-4 d-flex align-center">        
+
+          <span class="text-medium-emphasis ms-1 font-weight-light">
+            Answer Rating
+          </span>
+
+          <v-spacer></v-spacer>
+
+
+
+          <v-btn-toggle
+          rounded="4"
+          color="deep-purple-accent-3"
+          v-model="answerSelectedButton"
+          group
+          mandatory
+          >
+          <v-btn value="content"> Content (AI) </v-btn>
+
+          <v-btn value="exact"> Exact (Wording) </v-btn>
+          </v-btn-toggle>
+
+          </v-card>
+        </v-expansion-panel-text>
+      </v-expansion-panel>
       <v-expansion-panel title="Custom Instructions"></v-expansion-panel>
     </v-expansion-panels>
   </v-card>
@@ -30,6 +104,8 @@ export default {
   data: () => ({
     fileData: [],
     customInstructions: "",
+    difSelectedButton: 'medium',
+    answerSelectedButton: 'content'
   }),
   methods: {
     ReadFiles(){
