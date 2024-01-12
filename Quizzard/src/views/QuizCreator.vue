@@ -6,16 +6,13 @@ import vuetify from "../plugins/vuetify.js";
 <template>
   <v-app>
     <SideBar></SideBar>
-    <v-main color="background" class="d-flex align-center justify-center" height="100vh">
+    <v-main color="background" class="d-flex align-center justify-center" height="50vh">
       <v-card width="80vw" elevation="12">
     <v-toolbar color="primary" title="Create your Quiz"></v-toolbar>
-    <v-expansion-panels>
-      <v-expansion-panel title="Upload your Files">
-        <v-expansion-panel-text>
-          <v-file-input clearable label="File input" variant="outlined" multiple show-size @change="ReadFiles" ref="fileUpload"></v-file-input>
-        </v-expansion-panel-text>
-      </v-expansion-panel>
-      <v-expansion-panel title="Quiz Options">
+    <v-toolbar class="text-medium-emphasis mt-2 font-weight-light" color="secondary" title="Upload your files"></v-toolbar>
+    <v-file-input class="mt-4" clearable label="File input" variant="outlined" multiple show-size @change="ReadFiles" ref="fileUpload"></v-file-input>
+    <v-expansion-panels v-model="panel">
+      <v-expansion-panel expand title="Quiz Options" color="secondary">
         <v-expansion-panel-text>
           <v-card class="pa-4 d-flex align-center">        
 
@@ -90,7 +87,13 @@ import vuetify from "../plugins/vuetify.js";
           </v-card>
         </v-expansion-panel-text>
       </v-expansion-panel>
-      <v-expansion-panel title="Custom Instructions"></v-expansion-panel>
+      <v-expansion-panel expand title="Custom Instructions" color="secondary">
+        <v-expansion-panel-text>
+          <v-textarea
+            label="Your instructions"
+          ></v-textarea>
+        </v-expansion-panel-text>
+      </v-expansion-panel>
     </v-expansion-panels>
   </v-card>
     </v-main>
@@ -105,7 +108,8 @@ export default {
     fileData: [],
     customInstructions: "",
     difSelectedButton: 'medium',
-    answerSelectedButton: 'content'
+    answerSelectedButton: 'content',
+    panel: [0]
   }),
   methods: {
     ReadFiles(){

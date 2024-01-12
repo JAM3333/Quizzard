@@ -11,17 +11,25 @@ import 'vuetify/styles'
 // Composables
 import { createVuetify } from 'vuetify'
 
+const customTheme = {
+  dark: true,
+  colors: {
+    primary: '#2C2929',
+    secondary: '#393939',
+    third: '#2C2929',
+    button: '#07B5FF',
+    backgroundMain: '#4D4D4D',
+    background: '#3E3E3E', // If not using lighten/darken, use base to return hex
+  }
+}
+
+
 // https://vuetifyjs.com/en/introduction/why-vuetify/#feature-guides
 export default createVuetify({
   theme: {
-    defaultTheme: 'dark',
+    defaultTheme: 'customTheme',
     themes: {
-      dark: {
-        primary: '#2C2929',
-        secondary: '#2C2929',
-        third: '#2C2929',
-        background: '#4d4d4d', // If not using lighten/darken, use base to return hex
-      }
+      customTheme,
     },
   },
 })
