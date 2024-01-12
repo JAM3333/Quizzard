@@ -18,6 +18,7 @@ const customTheme = {
     secondary: '#393939',
     third: '#2C2929',
     button: '#07B5FF',
+    buttonSecond: '#41455D',
     backgroundMain: '#4D4D4D',
     background: '#3E3E3E', // If not using lighten/darken, use base to return hex
   }

@@ -6,7 +6,7 @@ import vuetify from "../plugins/vuetify.js";
 <template>
   <v-app>
     <SideBar></SideBar>
-    <v-main color="background" class="d-flex align-center justify-center" height="50vh">
+    <v-main color="background" class="d-flex align-center justify-center">
       <v-card width="80vw" elevation="12">
     <v-toolbar color="primary" title="Create your Quiz"></v-toolbar>
     <v-toolbar class="text-medium-emphasis mt-2 font-weight-light" color="secondary" title="Upload your files"></v-toolbar>
@@ -26,7 +26,7 @@ import vuetify from "../plugins/vuetify.js";
 
         <v-btn-toggle
           rounded="4"
-          color="deep-purple-accent-3"
+          color="button"
           v-model="difSelectedButton"
           group
           mandatory
@@ -51,7 +51,7 @@ import vuetify from "../plugins/vuetify.js";
 
           <v-btn-toggle
           rounded="4"
-          color="deep-purple-accent-3"
+          color="button"
           group
           mandatory
           >
@@ -74,7 +74,7 @@ import vuetify from "../plugins/vuetify.js";
 
           <v-btn-toggle
           rounded="4"
-          color="deep-purple-accent-3"
+          color="button"
           v-model="answerSelectedButton"
           group
           mandatory
@@ -95,6 +95,9 @@ import vuetify from "../plugins/vuetify.js";
         </v-expansion-panel-text>
       </v-expansion-panel>
     </v-expansion-panels>
+
+    <v-btn value="submit" class="mt-4 text-h3" color="button"> Generate Quiz </v-btn>
+
   </v-card>
     </v-main>
   </v-app>
