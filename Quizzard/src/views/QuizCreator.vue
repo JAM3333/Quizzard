@@ -7,7 +7,7 @@ import vuetify from "../plugins/vuetify.js";
   <v-app>
     <SideBar></SideBar>
     <v-main color="background" class="d-flex align-center justify-center">
-      <v-card width="80vw" height="auto" elevation="12">
+      <v-card width="80vw" elevation="12">
         <v-toolbar color="primary" title="Create your Quiz"></v-toolbar>
         <v-toolbar
           class="text-medium-emphasis mt-2 font-weight-light"
@@ -92,13 +92,8 @@ import vuetify from "../plugins/vuetify.js";
             </v-expansion-panel-text>
           </v-expansion-panel>
         </v-expansion-panels>
-        <v-btn
-          value="submit"
-          class="mt-4 mb-3 text-h3"
-          align-center
-          color="button"
-          height="6vh"
-        >
+
+        <v-btn value="submit" class="mt-4 text-h3" color="button">
           Generate Quiz
         </v-btn>
       </v-card>
@@ -132,6 +127,12 @@ export default {
         console.log(this.fileData);
       }
     },
+    CreateQuiz(){
+
+    },
+    EditQuiz(){
+
+    }
   },
 };
 </script>
