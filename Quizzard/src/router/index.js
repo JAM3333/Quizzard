@@ -19,6 +19,11 @@ const routes = [
         name: 'QuizCreator',
         component: () => import('@/views/QuizCreator.vue'),
       },
+      {
+        path: 'testing',
+        name: 'FunctionalityTest',
+        component: () => import('@/views/FunctionalityTest.vue'),
+      },
     ],
   },
 ]
