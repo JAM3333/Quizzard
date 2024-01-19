@@ -3,20 +3,24 @@
         expand-on-hover
         rail
       >
-        <v-list>
+        <v-list density="compact" nav>
           <v-list-item
-            prepend-avatar="help.jpeg"
-            title="Sandra Adams"
-            subtitle="sandra_a88@gmailcom"
+            prepend-icon="mdi-alpha-q"
+            title= "Qizzard"
           ></v-list-item>
         </v-list>
 
         <v-divider></v-divider>
 
         <v-list density="compact" nav>
-          <v-list-item prepend-icon="mdi-folder" title="My Files" value="myfiles"></v-list-item>
-          <v-list-item prepend-icon="mdi-account-multiple" title="Shared with me" value="shared"></v-list-item>
-          <v-list-item prepend-icon="mdi-star" title="Starred" value="starred"></v-list-item>
+          <v-list-item prepend-icon="mdi-plus-circle-outline" title="Create Quiz" value="CreateQuiz"></v-list-item>
+          <v-list-item prepend-icon="mdi-folder" title="My Quizzes" value="myQuiz"></v-list-item>
+          <v-list-item prepend-icon="mdi-account-multiple" title="Fwiends" value="friends"></v-list-item>
+          <v-divider></v-divider>
+        </v-list>
+        <v-list density="compact" nav class="align-end">
+          <v-list-item prepend-icon="mdi-account" title="Fwiends" class="align-end"></v-list-item>
+        <!-- Website for icons: https://pictogrammers.com/library/mdi/ -->
         </v-list>
       </v-navigation-drawer>
 
@@ -25,6 +29,6 @@
 <script>
  export default {
   name: 'Navbar',
- 
+  Username: 'fish',
   };
 </script>
