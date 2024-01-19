@@ -7,7 +7,7 @@ import vuetify from "../plugins/vuetify.js";
   <v-app>
     <SideBar></SideBar>
     <v-main color="background" class="d-flex align-center justify-center">
-      <v-card width="80vw" height="auto" elevation="12">
+      <v-card width="80vw" height="auto" class="d-flex align-center flex-column" elevation="12">
         <v-toolbar color="primary" title="Create your Quiz"></v-toolbar>
         <v-toolbar
           class="text-medium-emphasis mt-2 font-weight-light"
@@ -48,18 +48,71 @@ import vuetify from "../plugins/vuetify.js";
                   <v-btn value="difficult"> DIFFICULT </v-btn>
                 </v-btn-toggle>
               </v-card>
-              <v-card class="pa-4 d-flex align-center">
+              <v-card class="pa-4 d-flex align-center fit-content">
                 <span class="text-medium-emphasis ms-1 font-weight-light">
                   Question Count
                 </span>
 
                 <v-spacer></v-spacer>
 
-                <v-btn-toggle rounded="4" color="button" group mandatory>
-                  <v-btn value="easy"> EASY </v-btn>
-
-                  <v-btn value="medium"> MEDIUM </v-btn>
-                </v-btn-toggle>
+                <v-card class="d-flex mr-4  .justify-space-between flex-column" width="20vw">
+                  <v-toolbar
+                    class="text-medium-emphasis font-weight-light"
+                    color="secondary"
+                    title="Multiple Choice"
+                  ></v-toolbar>
+                  <v-slider
+                    v-model="sliderMultipleChoice"
+                    :max="sliderMax"
+                    :min="sliderMin"
+                    :step="1"
+                    class="pl-2"
+                    hide-details
+                  >
+                    <template v-slot:append>
+                      <v-text-field
+                        v-model="sliderMultipleChoice"
+                        hide-details
+                        single-line
+                        :max="sliderMax"
+                        :min="sliderMin"
+                        :step="1"
+                        density="compact"
+                        type="number"
+                        style="width: 5vw"
+                      ></v-text-field>
+                    </template>
+                  </v-slider>                  
+                </v-card>     
+                <v-card class="d-flex mr-4  .justify-space-between flex-column" width="20vw">
+                  <v-toolbar
+                    class="text-medium-emphasis font-weight-light"
+                    color="secondary"
+                    title="Text"
+                  ></v-toolbar>
+                  <v-slider
+                    v-model="sliderText"
+                    :max="sliderMax"
+                    :min="sliderMin"
+                    :step="1"
+                    class="pl-2"
+                    hide-details
+                  >
+                    <template v-slot:append>
+                      <v-text-field
+                        v-model="sliderText"
+                        hide-details
+                        single-line
+                        :max="sliderMax"
+                        :min="sliderMin"
+                        :step="1"
+                        density="compact"
+                        type="number"
+                        style="width: 5vw"
+                      ></v-text-field>
+                    </template>
+                  </v-slider>                  
+                </v-card>           
               </v-card>
               <v-card class="pa-4 d-flex align-center">
                 <span class="text-medium-emphasis ms-1 font-weight-light">
@@ -108,6 +161,10 @@ export default {
     customInstructions: "",
     difSelectedButton: "medium",
     answerSelectedButton: "content",
+    sliderMultipleChoice: 2,
+    sliderText: 8,
+    sliderMin: 0,
+    sliderMax: 16,
     panel: [0],
   }),
   methods: {
