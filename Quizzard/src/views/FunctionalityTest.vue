@@ -14,24 +14,30 @@ import vuetify from "../plugins/vuetify.js";
           color="secondary"
           title="Create Account"
         ></v-toolbar>
-       
-        <v-text-field
-          label="Username"
-          hide-details="auto"
-        ></v-text-field>
-        <v-text-field
-          label="Email"
-          hide-details="auto"
-          type="email"
-        ></v-text-field>
-        <v-text-field
-          label="Password"
-          hide-details="auto"
-          type="password"
-        ></v-text-field>
-        <v-btn value="submit" class="mt-4 mb-4 text-h3" height="auto" color="button">
+        <v-form action="../components/db.php" mehod="post">
+          <v-text-field
+            label="Username"
+            v-model="inputName"
+            hide-details="auto"
+          ></v-text-field>
+          <v-text-field
+            label="Email"
+            v-model="inputEmail"
+            hide-details="auto"
+            type="email"
+          ></v-text-field>
+          <v-text-field
+            label="Password"
+            v-model="inputPassword"
+            hide-details="auto"
+            type="password"
+          ></v-text-field>
+          <v-btn value="submit" @click="SendForm" class="mt-4 mb-4 text-h3" height="auto" color="button" >
           Create Account
         </v-btn>
+        </v-form>
+       
+      
         <v-btn value="submit" class="mt-4 mb-4 text-h3" height="auto" color="button">
           Return account by name
         </v-btn>
@@ -41,6 +47,7 @@ import vuetify from "../plugins/vuetify.js";
 </template>
 
 <script>
+import axios from 'axios';
 export default {
   data: () => ({
     fileData: [],
@@ -48,6 +55,9 @@ export default {
     difSelectedButton: "medium",
     answerSelectedButton: "content",
     panel: [0],
+    inputName:"",
+    inputEmail:"",
+    inputPassword:"",
   }),
   methods: {
     ReadFiles() {
@@ -71,6 +81,16 @@ export default {
     },
     EditQuiz(){
 
+    },
+    SendForm(){
+
+axios.get('http://localhost:3000')
+  .then(response => {
+    console.log(response.data);
+  })
+  .catch(error => {
+    console.error(error);
+  });
     }
   },
 };

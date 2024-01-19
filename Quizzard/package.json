@@ -10,7 +10,10 @@
   },
   "dependencies": {
     "@mdi/font": "7.0.96",
+    "axios": "^1.6.5",
     "core-js": "^3.29.0",
+    "express": "^4.18.2",
+    "mysql2": "^3.7.0",
     "openai": "^4.22.0",
     "roboto-fontface": "*",
     "vue": "^3.2.0",
