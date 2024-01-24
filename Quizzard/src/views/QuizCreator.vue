@@ -7,7 +7,7 @@ import vuetify from "../plugins/vuetify.js";
   <v-app>
     <SideBar></SideBar>
     <v-main color="background" class="d-flex align-center justify-center">
- l     <v-card width="80vw" color="secondary" height="auto" class="d-flex align-center flex-column pl-3 pr-3" elevation="12">
+     <v-card width="80vw" color="secondary" height="auto" class="d-flex align-center flex-column pl-3 pr-3" elevation="12">
         <v-toolbar color="primary" title="Create your Quiz"></v-toolbar>
         <v-toolbar
           class="text-medium-emphasis mt-2 font-weight-light"
