@@ -7,11 +7,11 @@ import vuetify from "../plugins/vuetify.js";
   <v-app>
     <SideBar></SideBar>
     <v-main color="background" class="d-flex align-center justify-center">
-      <v-card width="80vw" height="auto" class="d-flex align-center flex-column" elevation="12">
+ l     <v-card width="80vw" color="secondary" height="auto" class="d-flex align-center flex-column pl-3 pr-3" elevation="12">
         <v-toolbar color="primary" title="Create your Quiz"></v-toolbar>
         <v-toolbar
           class="text-medium-emphasis mt-2 font-weight-light"
-          color="secondary"
+          color="primary"
           title="Upload your files"
         ></v-toolbar>
         <v-file-input
@@ -25,8 +25,8 @@ import vuetify from "../plugins/vuetify.js";
           ref="fileUpload"
         ></v-file-input>
         <v-expansion-panels v-model="panel">
-          <v-expansion-panel expand title="Quiz Options" color="secondary">
-            <v-expansion-panel-text>
+          <v-expansion-panel expand title="Quiz Options" color="primary">
+            <v-expansion-panel-text :style="{background: $vuetify.theme.themes.background}">
               <v-card class="pa-4 d-flex align-center">
                 <span class="text-medium-emphasis ms-1 font-weight-light">
                   Quiz Difficulty

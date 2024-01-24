@@ -15,8 +15,8 @@ const customTheme = {
   dark: true,
   colors: {
     primary: '#2C2929',
-    secondary: '#393939',
-    third: '#2C2929',
+    secondary: '#3E3E3E',
+    third: '#393939',
     button: '#07B5FF',
     buttonSecond: '#41455D',
     backgroundMain: '#4D4D4D',
@@ -24,7 +24,7 @@ const customTheme = {
   }
 }
 
-
+  
 // https://vuetifyjs.com/en/introduction/why-vuetify/#feature-guides
 export default createVuetify({
   theme: {
