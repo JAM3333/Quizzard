@@ -3,7 +3,12 @@
     <SideBar></SideBar>
     <v-main color="background" class="d-flex align-center justify-center ga-8" width="auto">
       <v-card width="35vw" height="auto" elevation="12">
-        <v-toolbar></v-toolbar>
+        <v-toolbar
+          class="text-medium-emphasis font-weight-light"
+          color="secondary"
+          title="Recommendation 1"
+        ></v-toolbar>
+        
       </v-card>
       <v-card width="35vw" height="auto" elevation="12">
         <v-toolbar></v-toolbar>
