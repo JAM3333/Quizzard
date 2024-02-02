@@ -11,7 +11,7 @@
         </v-card>
     </v-div>
     <v-div class="d-flex align-center justify-center ga-8">
-        <v-card width="80vw" color="secondary" height="40vh" class="d-flex align-center flex-column" elevation="12">
+        <v-card width="74vw" color="secondary" height="40vh" class="d-flex align-center flex-column" elevation="12">
           <v-toolbar color="primary" title="Your Library"></v-toolbar>
         </v-card>
     </v-div>
