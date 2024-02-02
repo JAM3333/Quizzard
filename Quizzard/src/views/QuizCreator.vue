@@ -7,7 +7,7 @@ import vuetify from "../plugins/vuetify.js";
   <v-app>
     <SideBar></SideBar>
     <v-main color="background" class="d-flex align-center justify-center">
-      <v-card width="80vw" color="secondary" height="auto" class="d-flex align-center flex-column pl-3 pr-3" elevation="12">
+      <v-card width="80vw" color="secondary" height="85vh" class="d-flex align-center flex-column pl-3 pr-3" id="quizCreate" elevation="12">
         <v-toolbar color="primary" title="Create your Quiz"></v-toolbar>
         <v-toolbar
           class="text-medium-emphasis mt-2 font-weight-light"
@@ -146,6 +146,21 @@ import vuetify from "../plugins/vuetify.js";
           </v-expansion-panel>
         </v-expansion-panels>
 
+        <v-btn value="submit" v-on:click="CreateQuiz" class="mt-4 mb-4 text-h3" height="auto" color="button">
+          Generate Quiz
+        </v-btn>
+      </v-card>
+      <v-card width="80vw" color="secondary" height="85vh" class="d-none align-center flex-column pl-3 pr-3" id="quizEdit" elevation="12">
+        <v-toolbar color="primary" title="Quiz">   
+          <v-text-field
+            v-model="quizName"
+            hide-details
+            density="compact"
+            type="text"
+            style="width: 5vw"
+          ></v-text-field>
+        </v-toolbar>
+
         <v-btn value="submit" class="mt-4 mb-4 text-h3" height="auto" color="button">
           Generate Quiz
         </v-btn>
@@ -166,6 +181,32 @@ export default {
     sliderMin: 0,
     sliderMax: 16,
     panel: [0],
+    quizName: "",
+    returnedData: {
+      "QuizName": "My quiz 1",
+      "QuizDifficulty": 0, //Easy=0;Medium=1;Difficult=2
+      "AnswerRating": 0, //AI=0;Wording=1
+      "Questions": [
+        {
+          "Question": "How to eat?",
+          "Type": 0, // Text = 0
+          "AnswerRating": 0,
+          "Answer": "You eat"
+        },
+        {
+          "Question": "What is eat?",
+          "Type": 1, // Multiple Choice = 1
+          "Answer": 1, // which answer in answers is correct
+          "Answers": 
+            {
+              "Answer1": "Eat is eat",
+              "Answer2": "Table is eat",
+              "Answer3": "No is eat",
+              "Answer4": "Brick is eat",
+            },
+        },
+      ] 
+    }
   }),
   methods: {
     ReadFiles() {
@@ -185,7 +226,11 @@ export default {
       }
     },
     CreateQuiz(){
-
+        document.getElementById('quizCreate').classList.remove("d-flex")
+        document.getElementById('quizCreate').classList.add("d-none")
+        document.getElementById('quizEdit').classList.remove("d-none")
+        document.getElementById('quizEdit').classList.add("d-flex")
+        this.quizName = this.returnedData.QuizName
     },
     EditQuiz(){
 
