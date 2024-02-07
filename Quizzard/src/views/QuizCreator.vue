@@ -191,7 +191,13 @@ export default {
           "Question": "How to eat?",
           "Type": 0, // Text = 0
           "AnswerRating": 0,
-          "Answer": "You eat"
+          "Answers": "You eat"
+        },
+        {
+          "Question": "How to food?",
+          "Type": 0, // Text = 0
+          "AnswerRating": 0,
+          "Answers": "food"
         },
         {
           "Question": "What is eat?",
@@ -226,11 +232,65 @@ export default {
       }
     },
     CreateQuiz(){
-        document.getElementById('quizCreate').classList.remove("d-flex")
-        document.getElementById('quizCreate').classList.add("d-none")
-        document.getElementById('quizEdit').classList.remove("d-none")
-        document.getElementById('quizEdit').classList.add("d-flex")
-        this.quizName = this.returnedData.QuizName
+        document.getElementById('quizCreate').classList.remove("d-flex");
+        document.getElementById('quizCreate').classList.add("d-none");
+        document.getElementById('quizEdit').classList.remove("d-none");
+        document.getElementById('quizEdit').classList.add("d-flex");
+        this.quizName = this.returnedData.QuizName;
+        
+        //Container-Div für alle Fragen
+        let questionContainer = document.createElement("div");
+        questionContainer.classList.add("questionContainer");
+        document.getElementById('quizEdit').append(questionContainer);
+
+        //Iteriert über das JSON-Array
+        for (let i = 0; i < this.returnedData.Questions.length; i++) {
+          
+          let questionData = this.returnedData.Questions[i];
+          let answerType = questionData.Type;
+          let answerData = questionData.Answers;
+          //Erstellt ein Div für jede Frage und fügt dem div die Klasse "question" hinzu. Kann mit CSS dann gestyled werden
+          let questionDiv = document.createElement("div");
+          questionDiv.classList.add("question"); 
+
+          //Der Text der Frage wird als h1-Element dargestellt
+          let questionText = document.createElement("h1");
+          questionText.textContent = (i+1) + ". " + questionData.Question;
+          
+          let questionAnswers;
+          //Überprüft, ob es eine Multiple-Choice, oder eine Textfrage ist
+          if (answerType == 0) {
+            questionAnswers = document.createElement("input");
+            questionAnswers.setAttribute("type", "text");
+            questionAnswers.placeholder = "Lösung hier...";
+          }
+          else if (answerType == 1) {
+        questionAnswers = document.createElement("div");
+
+        //Iteriert über die Antworten, um dementsprechend Checkboxen dafür zu generieren -- Diese Schleife wurde von ChatGPT generiert
+        for (let j = 1; j <= Object.keys(answerData).length; j++) {
+          const answerCheckbox = document.createElement("input");
+          answerCheckbox.setAttribute("type", "checkbox");
+          answerCheckbox.setAttribute("id", `answer${j}`);
+          const answerLabel = document.createElement("label");
+          answerLabel.setAttribute("for", `answer${j}`);
+          answerLabel.textContent = answerData[`Answer${j}`];
+
+        //Fügt Checkbox und Label zum Antwort-Div hinzu
+          questionAnswers.appendChild(answerCheckbox);
+          questionAnswers.appendChild(answerLabel);
+        }
+      }
+  
+          //Dem Body wird das Div hinzugefügt und die Überschrift in das Div implementiert
+          questionDiv.appendChild(questionText);
+          questionDiv.appendChild(questionAnswers);
+          questionContainer.appendChild(questionDiv); 
+
+          
+}
+
+
     },
     EditQuiz(){
 
@@ -238,3 +298,14 @@ export default {
   },
 };
 </script>
+<style scoped>
+.questionContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: absolute; 
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+</style>
