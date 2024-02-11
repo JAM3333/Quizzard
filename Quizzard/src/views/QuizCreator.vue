@@ -1,5 +1,6 @@
 <script setup>
 import SideBar from "../components/Navbar.vue";
+import creatorQuestion from "../components/creatorQuestion.vue";
 import vuetify from "../plugins/vuetify.js";
 </script>
 
@@ -7,23 +8,25 @@ import vuetify from "../plugins/vuetify.js";
   <v-app>
     <SideBar></SideBar>
     <v-main color="background" class="d-flex align-center justify-center">
-      <v-card width="80vw" color="secondary" height="85vh" class="d-flex align-center flex-column pl-3 pr-3" id="quizCreate" elevation="12">
+      <v-card width="80vw" color="secondary" height="85vh" class="d-flex align-center flex-column" id="quizCreate" elevation="12">
         <v-toolbar color="primary" title="Create your Quiz"></v-toolbar>
-        <v-toolbar
-          class="text-medium-emphasis mt-2 font-weight-light"
-          color="primary"
-          title="Upload your files"
-        ></v-toolbar>
-        <v-file-input
-          class="mt-4"
-          clearable
-          label="File input"
-          variant="outlined"
-          multiple
-          show-size
-          @change="ReadFiles"
-          ref="fileUpload"
-        ></v-file-input>
+        <v-card width="80vw" outlined color="transparent" class="mt-5 mb-4">
+          <v-toolbar
+            class="text-medium-emphasis font-weight-light"
+            color="primary"
+            title="Upload your files"
+          ></v-toolbar>
+          <v-file-input
+            class="mt-4"
+            clearable
+            label="File input"
+            variant="outlined"
+            multiple
+            show-size
+            @change="ReadFiles"
+            ref="fileUpload"
+          ></v-file-input>
+        </v-card>
         <v-expansion-panels v-model="panel">
           <v-expansion-panel expand title="Quiz Options" color="primary">
             <v-expansion-panel-text :style="{background: $vuetify.theme.themes.background}">
@@ -150,17 +153,19 @@ import vuetify from "../plugins/vuetify.js";
           Generate Quiz
         </v-btn>
       </v-card>
-      <v-card width="80vw" color="secondary" height="85vh" class="d-none align-center flex-column pl-3 pr-3" id="quizEdit" elevation="12">
-        <v-toolbar color="primary" title="Quiz">   
+      <v-card width="80vw" color="secondary" height="85vh" class="d-none align-center flex-column" id="quizEdit" elevation="12">
+        <v-toolbar color="primary" title="Quiz">  
           <v-text-field
             v-model="quizName"
             hide-details
             density="compact"
             type="text"
-            style="width: 5vw"
+            class="mr-4"
           ></v-text-field>
-        </v-toolbar>
-
+        </v-toolbar> 
+        <v-card width="80vw" height="80vh" outlined color="transparent" class="mt-5 mb-4 overflow-y-auto">
+          <creatorQuestion></creatorQuestion>         
+        </v-card> 
         <v-btn value="submit" class="mt-4 mb-4 text-h3" height="auto" color="button">
           Generate Quiz
         </v-btn>
