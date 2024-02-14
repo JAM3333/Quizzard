@@ -205,15 +205,15 @@ export default {
           "Answers": "food"
         },
         {
-          "Question": "What is eat?",
+          "Question": "What is food?",
           "Type": 1, // Multiple Choice = 1
           "Answer": 1, // which answer in answers is correct
           "Answers": 
             {
-              "Answer1": "Eat is eat",
-              "Answer2": "Table is eat",
-              "Answer3": "No is eat",
-              "Answer4": "Brick is eat",
+              "Answer1": "Bread is food",
+              "Answer2": "Table is food",
+              "Answer3": "Egg is food",
+              "Answer4": "Brick is food",
             },
         },
       ] 
