@@ -191,6 +191,7 @@ export default {
       "QuizName": "My quiz 1",
       "QuizDifficulty": 0, //Easy=0;Medium=1;Difficult=2
       "AnswerRating": 0, //AI=0;Wording=1
+      "QuizImage": "imagelink.png",
       "Questions": [
         {
           "Question": "How to eat?",
