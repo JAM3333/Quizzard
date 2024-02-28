@@ -15,14 +15,15 @@
 <!-- Website for icons: https://pictogrammers.com/library/mdi/ -->
         <v-list density="compact" class="d-flex justify space-between flex-column" nav>
             <v-list-item prepend-icon="mdi-plus-circle-outline" title="Create Quiz" value="CreateQuiz" :to="{path: '/quizcreator'}"></v-list-item>
-          <v-list-item prepend-icon="mdi-magnify" title="Discover" value="discover"></v-list-item>
-          <v-list-item prepend-icon="mdi-folder" title="My Quizzes" value="myQuiz"></v-list-item>
-          <v-divider></v-divider>
-         <!-- <v-icon style="position: absolute; bottom: 10px;">mdi-logout</v-icon> -->
+          <v-list-item prepend-icon="mdi-magnify" title="Discover" value="discover" :to="{path: '/home'}"></v-list-item>
+          <v-list-item prepend-icon="mdi-folder" title="My Quizzes" value="myQuiz" :to="{path: '/home'}"></v-list-item>
         </v-list>
         <template v-slot:append>
+          <v-divider></v-divider>
           <v-list density="compact" nav>
-            <v-list-item prepend-icon="mdi-account" title="Username" value="Account"></v-list-item>
+
+            <v-list-item prepend-icon="mdi-account" title="Username" value="Account" append-icon="mdi-logout">
+            </v-list-item>
           </v-list>
         </template>
       </v-navigation-drawer>
