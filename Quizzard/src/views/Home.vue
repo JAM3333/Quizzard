@@ -45,7 +45,7 @@
                 </v-row>
               </v-container>
             </template>
-
+              
             <template v-slot:footer="{ page, pageCount, prevPage, nextPage }">
               <div class="d-flex align-center justify-center pa-4">
                 <v-btn
@@ -80,34 +80,31 @@
 </template>
 <script>
 import SideBar from '../components/Navbar.vue'
+import axios from "axios";
+
+const apiUrl = "http://localhost:3002";
 
 export default {
   name: 'App',
+  mounted(){
+    this.Initialize();
+  },
   data: () => ({
     search: '',
-    quizData: [
-        {
-          QuizName: "Math",
-          QuizImage: "https://cdn.vuetifyjs.com/images/parallax/material.jpg"
-        },
-        {
-          QuizName: "German",
-          QuizImage: "https://cdn.vuetifyjs.com/images/parallax/material.jpg"
-        },
-        {
-          QuizName: "English",
-          QuizImage: "https://cdn.vuetifyjs.com/images/parallax/material.jpg"
-        },
-        {
-          QuizName: "Random Stuff",
-          QuizImage: "https://cdn.vuetifyjs.com/images/parallax/material.jpg"
-        },
-        {
-          QuizName: "More Math",
-          QuizImage: "https://cdn.vuetifyjs.com/images/parallax/material.jpg"
-        },
-      ], 
+    quizData: [], 
   }),
+  methods: {
+    async Initialize(){
+      axios.get(`${apiUrl}/?format=json`).then((response) => {
+        this.quizData = response.data;
+        console.log("answer from server::",this.quizData);
+      })
+      .catch((error) => {
+        console.log("error recieved");
+        console.error("Error with the GET request:", error)
+      })
+    },
+  }
 };
 
 
