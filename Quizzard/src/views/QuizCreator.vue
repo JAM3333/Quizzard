@@ -1,6 +1,8 @@
 <script setup>
 import SideBar from "../components/Navbar.vue";
 import QuestionCard from "../components/QuestionCard.vue";
+import OpenAI from "openai";
+import { OPENAI_API_KEY } from '../config';
 </script>
 
 <template>
@@ -296,16 +298,32 @@ export default {
         console.log(this.fileData);
       }
     },
+    APICall(){
+      const openai = new OpenAI({ apiKey: OPENAI_API_KEY, dangerouslyAllowBrowser: true });
+
+      async function main() {
+        const completion = await openai.chat.completions.create({
+          messages: [{ role: "system", content: "Guten Tag" }],
+          model: "gpt-3.5-turbo",
+      });
+
+      console.log(completion.choices[0]);
+      }
+
+      main();
+    },
     CreateQuiz(){
       document.getElementById('quizCreate').classList.remove("d-flex");
       document.getElementById('quizCreate').classList.add("d-none");
       document.getElementById('quizEdit').classList.remove("d-none");
       document.getElementById('quizEdit').classList.add("d-flex");
-      this.quizName = this.returnedData.QuizName;              
+      this.quizName = this.returnedData.QuizName;       
+      this.APICall();  
+
     },
     EditQuiz(){
 
-    }
+    },
   },
 };
 </script>
