@@ -1,14 +1,7 @@
 <template>
-      <v-navigation-drawer
-        expand-on-hover
-        rail
-        style="position: fixed;"
-      >
+      <v-navigation-drawer expand-on-hover rail style="position: fixed;">
         <v-list density="compact" nav>
-          <v-list-item :to="{path: '/home'}"
-            prepend-icon="mdi-alpha-q"
-            title= "Qizzard"
-          ></v-list-item>
+          <v-list-item :to="{path: '/home'}" prepend-icon="mdi-alpha-q" title= "Qizzard"></v-list-item>
         </v-list>
 
         <v-divider></v-divider>
@@ -22,7 +15,8 @@
           <v-divider></v-divider>
           <v-list density="compact" nav>
 
-            <v-list-item prepend-icon="mdi-account" title="Username" value="Account" append-icon="mdi-logout">
+            <v-list-item prepend-avatar="../assets/logo.png" title="Username" value="Account">
+              <v-icon @click="logout()" style="position: absolute; left: 210px; right: 0; bottom: 8px; " color="error">mdi-logout</v-icon>
             </v-list-item>
           </v-list>
         </template>
@@ -33,5 +27,11 @@
  export default {
   name: 'Navbar',
   Username: 'fish',
+  methods: {
+    logout() {
+      alert("rip bozo");
+    },
+  }
   };
+
 </script>
