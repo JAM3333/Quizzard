@@ -162,21 +162,17 @@ import QuestionCard from "../components/QuestionCard.vue";
             class="mr-4"
           ></v-text-field>
         </v-toolbar> 
-        <v-card width="80vw" height="80vh" outlined color="transparent" class="mt-5 mb-4 overflow-y-auto">
+        <v-card width="80vw" height="80vh" style="background-color: rgba(255, 255, 255, 0) !important; border-color: white !important" class="mt-5 mb-4 overflow-y-auto">
           <v-data-iterator :items="returnedData.Questions">
             <template v-slot:default="{ items }">
-              <v-container class="pa-2" fluid>
-                <v-row dense>
-                  <v-col v-for="item in items" :key="item.title" cols="auto">
-                    <QuestionCard class="fill-height"
+                  <v-expansion-panels v-for="item in items" :key="item.title" cols="auto">
+                    <QuestionCard class="fill-height mt-3"
                       :question="item.raw.Question"
                       :type="item.raw.Type"
                       :answerRating="item.raw.AnswerRating"
                       :answers="item.raw.Answers"
                     ></QuestionCard>
-                  </v-col>
-                </v-row>
-              </v-container>
+                  </v-expansion-panels>
             </template>
           </v-data-iterator>
         </v-card> 

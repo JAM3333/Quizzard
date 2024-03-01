@@ -1,17 +1,16 @@
 <template>
-   <v-card width="75vw" color="secondary" height="30vh" class="d-flex align-center flex-column ml-8" elevation="12">   
-    <v-expansion-panels>
-      <v-expansion-panel
-            expand
-            title="Custom Instructions"
-            color="primary"
-          >
-            <v-expansion-panel-text>
-              <v-textarea label="Your instructions"></v-textarea>
-            </v-expansion-panel-text>
-          </v-expansion-panel>
-        </v-expansion-panels>
-  </v-card>
+  <v-expansion-panel
+        :title="question"
+        color="primary"
+      >
+      <v-expansion-panel-text v-for="(item, index) in this.answers" :key="item">
+        <v-text-field
+          :label="`Answer ${index}`"
+          :model-value="item"
+          @input="handleInput"
+        ></v-text-field>
+        </v-expansion-panel-text>
+    </v-expansion-panel>
   </template>
    
 <script>
@@ -34,5 +33,13 @@ export default {
       required: false,
     },
   },
+  data: () => ({
+    answersData: "this.answers",
+  }),
+  methods: {
+    handleInput (e) {
+      console.log(this.answers)
+    }
+  }
 }
 </script>
