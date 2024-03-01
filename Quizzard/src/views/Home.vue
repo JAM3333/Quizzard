@@ -82,7 +82,7 @@
 import SideBar from '../components/Navbar.vue'
 import axios from "axios";
 
-const apiUrl = "http://localhost:3002";
+const apiUrl = "http://10.115.2.40:3002";
 
 export default {
   name: 'App',

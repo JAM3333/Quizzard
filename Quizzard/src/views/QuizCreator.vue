@@ -1,7 +1,6 @@
 <script setup>
 import SideBar from "../components/Navbar.vue";
-import creatorQuestion from "../components/creatorQuestion.vue";
-import vuetify from "../plugins/vuetify.js";
+import QuestionCard from "../components/QuestionCard.vue";
 </script>
 
 <template>
@@ -164,7 +163,22 @@ import vuetify from "../plugins/vuetify.js";
           ></v-text-field>
         </v-toolbar> 
         <v-card width="80vw" height="80vh" outlined color="transparent" class="mt-5 mb-4 overflow-y-auto">
-          <creatorQuestion></creatorQuestion>         
+          <v-data-iterator :items="returnedData.Questions">
+            <template v-slot:default="{ items }">
+              <v-container class="pa-2" fluid>
+                <v-row dense>
+                  <v-col v-for="item in items" :key="item.title" cols="auto">
+                    <QuestionCard class="fill-height"
+                      :question="item.raw.Question"
+                      :type="item.raw.Type"
+                      :answerRating="item.raw.AnswerRating"
+                      :answers="item.raw.Answers"
+                    ></QuestionCard>
+                  </v-col>
+                </v-row>
+              </v-container>
+            </template>
+          </v-data-iterator>
         </v-card> 
         <v-btn value="submit" class="mt-4 mb-4 text-h3" height="auto" color="button">
           Generate Quiz
@@ -197,24 +211,24 @@ export default {
           "Question": "How to eat?",
           "Type": 0, // Text = 0
           "AnswerRating": 0,
-          "Answers": "You eat"
+          "Answers": {"1":"You eat"},
         },
         {
           "Question": "How to food?",
           "Type": 0, // Text = 0
           "AnswerRating": 0,
-          "Answers": "food"
+          "Answers": {"1":"You eat"},
         },
         {
           "Question": "What is food?",
           "Type": 1, // Multiple Choice = 1
-          "Answer": 1, // which answer in answers is correct
+          "AnswerRating": 2, // which answer in answers is correct + 1 (0 and 1 are already reserved for Real answer Rating)
           "Answers": 
             {
-              "Answer1": "Bread is food",
-              "Answer2": "Table is food",
-              "Answer3": "Egg is food",
-              "Answer4": "Brick is food",
+              "1": "Bread is food",
+              "2": "Table is food",
+              "3": "Egg is food",
+              "4": "Brick is food",
             },
         },
       ] 
@@ -238,65 +252,11 @@ export default {
       }
     },
     CreateQuiz(){
-        document.getElementById('quizCreate').classList.remove("d-flex");
-        document.getElementById('quizCreate').classList.add("d-none");
-        document.getElementById('quizEdit').classList.remove("d-none");
-        document.getElementById('quizEdit').classList.add("d-flex");
-        this.quizName = this.returnedData.QuizName;
-        
-        //Container-Div für alle Fragen
-        let questionContainer = document.createElement("div");
-        questionContainer.classList.add("questionContainer");
-        document.getElementById('quizEdit').append(questionContainer);
-
-        //Iteriert über das JSON-Array
-        for (let i = 0; i < this.returnedData.Questions.length; i++) {
-          
-          let questionData = this.returnedData.Questions[i];
-          let answerType = questionData.Type;
-          let answerData = questionData.Answers;
-          //Erstellt ein Div für jede Frage und fügt dem div die Klasse "question" hinzu. Kann mit CSS dann gestyled werden
-          let questionDiv = document.createElement("div");
-          questionDiv.classList.add("question"); 
-
-          //Der Text der Frage wird als h1-Element dargestellt
-          let questionText = document.createElement("h1");
-          questionText.textContent = (i+1) + ". " + questionData.Question;
-          
-          let questionAnswers;
-          //Überprüft, ob es eine Multiple-Choice, oder eine Textfrage ist
-          if (answerType == 0) {
-            questionAnswers = document.createElement("input");
-            questionAnswers.setAttribute("type", "text");
-            questionAnswers.placeholder = "Lösung hier...";
-          }
-          else if (answerType == 1) {
-        questionAnswers = document.createElement("div");
-
-        //Iteriert über die Antworten, um dementsprechend Checkboxen dafür zu generieren -- Diese Schleife wurde von ChatGPT generiert
-        for (let j = 1; j <= Object.keys(answerData).length; j++) {
-          const answerCheckbox = document.createElement("input");
-          answerCheckbox.setAttribute("type", "checkbox");
-          answerCheckbox.setAttribute("id", `answer${j}`);
-          const answerLabel = document.createElement("label");
-          answerLabel.setAttribute("for", `answer${j}`);
-          answerLabel.textContent = answerData[`Answer${j}`];
-
-        //Fügt Checkbox und Label zum Antwort-Div hinzu
-          questionAnswers.appendChild(answerCheckbox);
-          questionAnswers.appendChild(answerLabel);
-        }
-      }
-  
-          //Dem Body wird das Div hinzugefügt und die Überschrift in das Div implementiert
-          questionDiv.appendChild(questionText);
-          questionDiv.appendChild(questionAnswers);
-          questionContainer.appendChild(questionDiv); 
-
-          
-}
-
-
+      document.getElementById('quizCreate').classList.remove("d-flex");
+      document.getElementById('quizCreate').classList.add("d-none");
+      document.getElementById('quizEdit').classList.remove("d-none");
+      document.getElementById('quizEdit').classList.add("d-flex");
+      this.quizName = this.returnedData.QuizName;              
     },
     EditQuiz(){
 
