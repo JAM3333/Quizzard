@@ -211,13 +211,13 @@ export default {
           "Question": "How to eat?",
           "Type": 0, // Text = 0
           "AnswerRating": 0,
-          "Answers": "You eat"
+          "Answers": {"1":"You eat"},
         },
         {
           "Question": "How to food?",
           "Type": 0, // Text = 0
           "AnswerRating": 0,
-          "Answers": "food"
+          "Answers": {"1":"You eat"},
         },
         {
           "Question": "What is food?",
@@ -225,10 +225,10 @@ export default {
           "AnswerRating": 2, // which answer in answers is correct + 1 (0 and 1 are already reserved for Real answer Rating)
           "Answers": 
             {
-              "Answer1": "Bread is food",
-              "Answer2": "Table is food",
-              "Answer3": "Egg is food",
-              "Answer4": "Brick is food",
+              "1": "Bread is food",
+              "2": "Table is food",
+              "3": "Egg is food",
+              "4": "Brick is food",
             },
         },
       ] 

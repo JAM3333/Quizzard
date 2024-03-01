@@ -24,7 +24,7 @@ export default {
       required: true,
     },
     answers: {
-      type: String,
+      type: Object,
       required: false,
     },
   },
