@@ -1,6 +1,8 @@
 <script setup>
 import SideBar from "../components/Navbar.vue";
 import QuestionCard from "../components/QuestionCard.vue";
+import OpenAI from "openai";
+import { OPENAI_API_KEY } from '../config';
 </script>
 
 <template>
@@ -202,36 +204,85 @@ export default {
     panel: [0],
     quizName: "",
     returnedData: {
-      "QuizName": "My quiz 1",
-      "QuizDifficulty": 0, //Easy=0;Medium=1;Difficult=2
-      "AnswerRating": 0, //AI=0;Wording=1
-      "QuizImage": "imagelink.png",
+      "QuizName": "Kulinarische Fähigkeiten Herausforderung",
+      "QuizDifficulty": 0, // Einfach=0; Mittel=1; Schwierig=2
+      "AnswerRating": 0, // KI=0; Formulierung=1
+      "QuizImage": "koch-thema-bild.png",
       "Questions": [
         {
-          "Question": "How to eat?",
-          "Type": 0, // Text = 0
-          "AnswerRating": 0,
-          "Answers": {"1":"You eat"},
+          "Question": "Welches dieser Mittel ist ein Treibmittel beim Backen?",
+          "Type": 1, // Mehrfachauswahl = 1
+          "AnswerRating": 3, // Richtige Antwort ist "Backsoda" + 1
+          "Answers": {
+            "1": "Salz",
+            "2": "Zucker",
+            "3": "Backsoda",
+            "4": "Wasser"
+          }
         },
         {
-          "Question": "How to food?",
-          "Type": 0, // Text = 0
-          "AnswerRating": 0,
-          "Answers": {"1":"You eat"},
+          "Question": "Wie heißt die Kochtechnik, bei der Lebensmittel kurz in kochendes Wasser getaucht und dann in kaltes Wasser gelegt werden?",
+          "Type": 1, // Mehrfachauswahl = 1
+          "AnswerRating": 3, // Richtige Antwort ist "Blanchieren" + 1
+          "Answers": {
+            "1": "Braten",
+            "2": "Blanchieren",
+            "3": "Dämpfen",
+            "4": "Schmoren"
+          }
         },
         {
-          "Question": "What is food?",
-          "Type": 1, // Multiple Choice = 1
-          "AnswerRating": 2, // which answer in answers is correct + 1 (0 and 1 are already reserved for Real answer Rating)
-          "Answers": 
-            {
-              "1": "Bread is food",
-              "2": "Table is food",
-              "3": "Egg is food",
-              "4": "Brick is food",
-            },
+          "Question": "Was ist die Hauptzutat in einem traditionellen italienischen Pesto?",
+          "Type": 1, // Mehrfachauswahl = 1
+          "AnswerRating": 2, // Richtige Antwort ist "Basilikum" + 1
+          "Answers": {
+            "1": "Basilikum",
+            "2": "Petersilie",
+            "3": "Koriander",
+            "4": "Minze"
+          }
         },
-      ] 
+        {
+          "Question": "Was bedeutet 'al dente' beim Kochen von Pasta?",
+          "Type": 1, // Mehrfachauswahl = 1
+          "AnswerRating": 3, // Richtige Antwort ist "Bissfest" + 1
+          "Answers": {
+            "1": "Vollständig gekocht",
+            "2": "Bissfest",
+            "3": "Überkocht",
+            "4": "Ungekocht"
+          }
+        },
+        {
+          "Question": "Welches dieser Fette gilt als das gesündeste zum Kochen?",
+          "Type": 1, // Mehrfachauswahl = 1
+          "AnswerRating": 2, // Richtige Antwort ist "Olivenöl" + 1
+          "Answers": {
+            "1": "Butter",
+            "2": "Olivenöl",
+            "3": "Schmalz",
+            "4": "Pflanzenfett"
+          }
+        },
+        {
+          "Question": "Beschreibe den Prozess des Karamellisierens von Zwiebeln.",
+          "Type": 0, // Text = 0
+          "AnswerRating": 0,
+          "Answers": {"1": "Langsames Kochen von Zwiebeln, bis sie tiefbraun und gesüßt sind"}
+        },
+        {
+          "Question": "Wie heißt die Methode, Fleisch langsam in eigenem Fett zu garen?",
+          "Type": 0, // Text = 0
+          "AnswerRating": 0,
+          "Answers": {"1": "Confit"}
+        },
+        {
+          "Question": "Nenne eine traditionelle Methode zur Konservierung von Zitronen.",
+          "Type": 0, // Text = 0
+          "AnswerRating": 0,
+          "Answers": {"1": "Salzen und Fermentieren im Glas"}
+        }
+      ]
     }
   }),
   methods: {
@@ -251,16 +302,32 @@ export default {
         console.log(this.fileData);
       }
     },
+    APICall(){
+      const openai = new OpenAI({ apiKey: OPENAI_API_KEY, dangerouslyAllowBrowser: true });
+
+      async function main() {
+        const completion = await openai.chat.completions.create({
+          messages: [{ role: "system", content: "Guten Tag" }],
+          model: "gpt-3.5-turbo",
+      });
+
+      console.log(completion.choices[0]);
+      }
+
+      main();
+    },
     CreateQuiz(){
       document.getElementById('quizCreate').classList.remove("d-flex");
       document.getElementById('quizCreate').classList.add("d-none");
       document.getElementById('quizEdit').classList.remove("d-none");
       document.getElementById('quizEdit').classList.add("d-flex");
-      this.quizName = this.returnedData.QuizName;              
+      this.quizName = this.returnedData.QuizName;       
+      this.APICall();  
+
     },
     EditQuiz(){
 
-    }
+    },
   },
 };
 </script>
