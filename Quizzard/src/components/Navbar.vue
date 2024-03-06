@@ -12,7 +12,7 @@
           <v-list-item prepend-icon="mdi-folder" title="My Quizzes" value="myQuiz" :to="{path: '/home'}"></v-list-item>
         </v-list>
         <template v-slot:append>
-          <v-btn v-if="!loggedIn" @click="logout()">login</v-btn>
+          <v-btn v-if="!loggedIn" @click="logout()" :to="{path: '/login'}">login</v-btn>
           <v-divider></v-divider>
           <v-list density="compact" nav>
 
@@ -27,13 +27,16 @@
 <script>
  export default {
   name: 'Navbar',
-  Username: 'fish',
-  loggedIn: false,
+  data() {
+    return {
+      Username: 'fish',
+      loggedIn: false,
+    };
+  },
   methods: {
     logout() {
       this.loggedIn = !this.loggedIn;
     },
-  }
-  };
-
+  },
+};
 </script>
