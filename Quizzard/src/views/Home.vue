@@ -40,6 +40,7 @@
                     <QuizCard class="fill-height"
                       :name="item.raw.QuizName"
                       :image="item.raw.QuizImage"
+                      :id="item.raw.QuizID"
                     ></QuizCard>
                   </v-col>
                 </v-row>
@@ -82,7 +83,7 @@
 import SideBar from '../components/Navbar.vue'
 import axios from "axios";
 
-const apiUrl = "http://10.115.2.40:3002";
+const apiUrl = "http://10.115.2.40:3004";
 
 export default {
   name: 'App',
@@ -92,10 +93,11 @@ export default {
   data: () => ({
     search: '',
     quizData: [], 
+    userid: 1,
   }),
   methods: {
     async Initialize(){
-      axios.get(`${apiUrl}/?format=json`).then((response) => {
+      axios.get(`${apiUrl}/getQuizzes?format=json`,{params: {userid: 1}}).then((response) => {     //{sqlQuery: `select QuizName,QuizImage from Quizzes where UserIDFK=1`}
         this.quizData = response.data;
         console.log("answer from server::",this.quizData);
       })
@@ -104,6 +106,7 @@ export default {
         console.error("Error with the GET request:", error)
       })
     },
+
   }
 };
 

@@ -167,7 +167,7 @@ import { OPENAI_API_KEY } from '../config';
         <v-card width="80vw" height="80vh" style="background-color: rgba(255, 255, 255, 0) !important; border-color: white !important" class="mt-5 mb-4 overflow-y-auto">
           <v-data-iterator :items="returnedData.Questions">
             <template v-slot:default="{ items }">
-                  <v-expansion-panels v-for="item in items" :key="item.title" cols="auto">
+                  <v-expansion-panels  class="overflow-y-auto" v-for="item in items" :key="item.title" cols="auto">
                     <QuestionCard class="fill-height mt-3"
                       :question="item.raw.Question"
                       :type="item.raw.Type"
@@ -187,8 +187,17 @@ import { OPENAI_API_KEY } from '../config';
 </template>
 
 <script>
+import axios from "axios";
+
+const apiUrl = "http://10.115.2.40:3004";
+
 export default {
+  
+  mounted(){
+    this.Initialize();
+  },
   data: () => ({
+    quizID: -1,
     fileData: [],
     customInstructions: "",
     difSelectedButton: "medium",
@@ -199,6 +208,7 @@ export default {
     sliderMax: 16,
     panel: [0],
     quizName: "",
+    sqlData: {},
     returnedData: {
       "QuizName": "Kulinarische Fähigkeiten Herausforderung",
       "QuizDifficulty": 0, // Einfach=0; Mittel=1; Schwierig=2
@@ -215,69 +225,13 @@ export default {
             "3": "Backsoda",
             "4": "Wasser"
           }
-        },
-        {
-          "Question": "Wie heißt die Kochtechnik, bei der Lebensmittel kurz in kochendes Wasser getaucht und dann in kaltes Wasser gelegt werden?",
-          "Type": 1, // Mehrfachauswahl = 1
-          "AnswerRating": 3, // Richtige Antwort ist "Blanchieren" + 1
-          "Answers": {
-            "1": "Braten",
-            "2": "Blanchieren",
-            "3": "Dämpfen",
-            "4": "Schmoren"
-          }
-        },
-        {
-          "Question": "Was ist die Hauptzutat in einem traditionellen italienischen Pesto?",
-          "Type": 1, // Mehrfachauswahl = 1
-          "AnswerRating": 2, // Richtige Antwort ist "Basilikum" + 1
-          "Answers": {
-            "1": "Basilikum",
-            "2": "Petersilie",
-            "3": "Koriander",
-            "4": "Minze"
-          }
-        },
-        {
-          "Question": "Was bedeutet 'al dente' beim Kochen von Pasta?",
-          "Type": 1, // Mehrfachauswahl = 1
-          "AnswerRating": 3, // Richtige Antwort ist "Bissfest" + 1
-          "Answers": {
-            "1": "Vollständig gekocht",
-            "2": "Bissfest",
-            "3": "Überkocht",
-            "4": "Ungekocht"
-          }
-        },
-        {
-          "Question": "Welches dieser Fette gilt als das gesündeste zum Kochen?",
-          "Type": 1, // Mehrfachauswahl = 1
-          "AnswerRating": 2, // Richtige Antwort ist "Olivenöl" + 1
-          "Answers": {
-            "1": "Butter",
-            "2": "Olivenöl",
-            "3": "Schmalz",
-            "4": "Pflanzenfett"
-          }
-        },
+        },    
         {
           "Question": "Beschreibe den Prozess des Karamellisierens von Zwiebeln.",
           "Type": 0, // Text = 0
           "AnswerRating": 0,
           "Answers": {"1": "Langsames Kochen von Zwiebeln, bis sie tiefbraun und gesüßt sind"}
         },
-        {
-          "Question": "Wie heißt die Methode, Fleisch langsam in eigenem Fett zu garen?",
-          "Type": 0, // Text = 0
-          "AnswerRating": 0,
-          "Answers": {"1": "Confit"}
-        },
-        {
-          "Question": "Nenne eine traditionelle Methode zur Konservierung von Zitronen.",
-          "Type": 0, // Text = 0
-          "AnswerRating": 0,
-          "Answers": {"1": "Salzen und Fermentieren im Glas"}
-        }
       ]
     }
   }),
@@ -303,7 +257,32 @@ export default {
 
       async function main() {
         const completion = await openai.chat.completions.create({
-          messages: [{ role: "system", content: "Guten Tag" }],
+          messages: [{ role: "system", content: `Generate a quiz from the attached file and the following instructions: ${this.customInstructions}. Create ${this.sliderText} Text-Questions and ${sliderMultipleChoice} Multiple-choice-questions with a difficulty of ${this.difSelectedButton} using the following json format (Example):   {"QuizName": "Name",
+      "QuizDifficulty": 0, // easy=0; medium=1; difficult=2
+      "AnswerRating": 0, // KI=0; Formulierung=1
+      "QuizImage": "image.png",
+      "Questions": [
+        {
+          "Question": "Frage 1?",
+          "Type": 1, // Mehrfachauswahl = 1
+          "AnswerRating": 3, // Richtige Antwort ist Answer 3
+          "Answers": {
+            "1": "Salz",
+            "2": "Zucker",
+            "3": "Backsoda",
+            "4": "Wasser"
+          }
+        },
+        {
+          "Question": "Frage 2?",
+          "Type": 0, // Textantwort = 0
+          "AnswerRating": 0,
+          "Answers": {
+            "1": "Viel Wasser"
+          }
+        },
+      ]
+    }`  }],
           model: "gpt-3.5-turbo",
       });
 
@@ -313,17 +292,51 @@ export default {
       main();
     },
     CreateQuiz(){
-      document.getElementById('quizCreate').classList.remove("d-flex");
-      document.getElementById('quizCreate').classList.add("d-none");
-      document.getElementById('quizEdit').classList.remove("d-none");
-      document.getElementById('quizEdit').classList.add("d-flex");
+      this.SwitchPage();
       this.quizName = this.returnedData.QuizName;       
       this.APICall();  
 
     },
+    SwitchPage(){
+      document.getElementById('quizCreate').classList.remove("d-flex");
+      document.getElementById('quizCreate').classList.add("d-none");
+      document.getElementById('quizEdit').classList.remove("d-none");
+      document.getElementById('quizEdit').classList.add("d-flex");
+    },
     EditQuiz(){
 
     },
+    async Initialize(){
+      if(this.$route.params.quizID){
+        this.quizID = this.$route.params.quizID;
+        this.SwitchPage();
+        this.ApiGet(`select * from Quizzes where QuizID=`+this.quizID);
+        
+        this.quizName = this.sqlData.QuizName;
+        this.returnedData.QuizName = this.sqlData.QuizName;
+        this.returnedData.QuizDifficulty = this.sqlData.QuizDifficulty;
+        this.returnedData.AnswerRating = this.sqlData.AnswerRating;
+        this.returnedData.QuizImage = this.sqlData.QuizImage;
+        this.ApiGet( `select * from Questions where QuizIDFK=`+this.quizID);
+        for (let i=0;i<=this.sqlData.length;i++){
+            this.returnedData.Answers[i].Question = this.sqlData[i].Question;
+            this.returnedData.Answers[i].Type = this.sqlData[i].QuestionType;
+            this.returnedData.Answers[i].AnswerRating = this.sqlData[i].AnswerRating;
+            this.ApiGet( `select * from Answers where AnswerID=`+i);
+        }
+      };
+    },
+    async ApiGet(query){
+      this.sqlData = {};
+      axios.get(`${apiUrl}/sql?format=json`,{params: {sqlQuery:query}}).then((response) => {    
+        this.sqlData = response.data;
+        console.log("answer from server::",this.sqlData);
+      })
+      .catch((error) => {
+        console.log("error recieved");
+        console.error("Error with the GET request:", error)
+      })
+    }
   },
 };
 </script>

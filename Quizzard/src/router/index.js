@@ -2,6 +2,11 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
 const routes = [
+  {    
+    path: '/quizcreator/:quizID', // ":userId" is a route parametername: 'User',
+    name: 'QuizCreatorId',
+    component: () => import('../views/QuizCreator.vue')
+  },
   {
     path: '/',
     redirect: '/home',
