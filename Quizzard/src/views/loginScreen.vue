@@ -69,7 +69,7 @@
                      placeholder="password"
                      required
                   ></v-text-field>
-                  <v-btn type="submit" class="mt-4" color="primary" value="log in" width="20vw" :to="{path: '/home'}">Sign Up</v-btn>
+                  <v-btn type="submit" class="mt-4" color="primary" value="log in" width="20vw" >Sign Up</v-btn>
                </form>
             </v-card>
     </v-main>
@@ -106,11 +106,13 @@
    methods: {
      login() {
        const { username } = this;
-       console.log(username + " logged in")
+       console.log(username + " logged in");
+       this.$router.push({ path: '/home' });
      },
      signup() {
        const { username } = this;
-       console.log(username + " signed up")
+       console.log(username + " signed up");
+       this.$router.push({ path: '/home' });
      },
      pageToSignup() {
         this.currentPageIsLogin = false;
