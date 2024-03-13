@@ -7,18 +7,23 @@
       ></v-img>
    
       <v-toolbar color="primary" class="text-h1" :title="name"> 
-        <v-btn icon="mdi-play"></v-btn>
-        <v-btn icon="mdi-wrench"></v-btn>
+        <v-btn icon="mdi-play" href="../views/QuizCreator.vue"></v-btn>
+        <v-btn icon="mdi-wrench" @click="creator"></v-btn>
       </v-toolbar>
     </v-card>
 </template>
 
 
 <script>
+
 export default {
   props: {
     name: {
       type: String,
+      required: true,
+    },
+    id: {
+      type: Number,
       required: true,
     },
     image: {
@@ -26,6 +31,11 @@ export default {
       required: true,
     },
   },
+  methods: {
+    creator(){
+      this.$router.push({ name: 'QuizCreatorId', params: { quizID:this.id } });
+    },
+  }
 }
 
 </script>
