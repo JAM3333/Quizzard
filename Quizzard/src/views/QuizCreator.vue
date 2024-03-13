@@ -3,6 +3,8 @@ import SideBar from "../components/Navbar.vue";
 import QuestionCard from "../components/QuestionCard.vue";
 import OpenAI from "openai";
 import { OPENAI_API_KEY } from '../config';
+import axios from 'axios';
+
 </script>
 
 <template>
@@ -17,6 +19,7 @@ import { OPENAI_API_KEY } from '../config';
             color="primary"
             title="Upload your files"
           ></v-toolbar>
+          
           <v-file-input
             class="mt-4"
             clearable
@@ -24,6 +27,7 @@ import { OPENAI_API_KEY } from '../config';
             variant="outlined"
             multiple
             show-size
+            name="fileo"
             @change="ReadFiles"
             ref="fileUpload"
           ></v-file-input>
@@ -304,11 +308,13 @@ export default {
     },
     APICall(){
       const openai = new OpenAI({ apiKey: OPENAI_API_KEY, dangerouslyAllowBrowser: true });
-
+      
       async function main() {
         const completion = await openai.chat.completions.create({
-          messages: [{ role: "system", content: "Guten Tag" }],
-          model: "gpt-3.5-turbo",
+          //messages: [{ role: "system", content: "Guten Tag" }],
+          file: file,
+          purpose: "assistants",
+          model: "gpt-4",
       });
 
       console.log(completion.choices[0]);
@@ -316,13 +322,32 @@ export default {
 
       main();
     },
+    uploadFile() {
+    const formData = new FormData();
+    let fileUploadLength = this.$refs.fileUpload.files.length;
+
+    for(let i=0;i<fileUploadLength;i++)
+    {
+      formData.append('file', this.$refs.fileUpload.files[i]);
+    }
+
+    axios.post('http://10.115.2.38:3002/api/Upload', formData)
+      .then(response => {
+        console.log(response.data);
+    })
+      .catch(error => {
+        console.error('Error uploading file:', error);
+    });
+         },
     CreateQuiz(){
       document.getElementById('quizCreate').classList.remove("d-flex");
       document.getElementById('quizCreate').classList.add("d-none");
       document.getElementById('quizEdit').classList.remove("d-none");
       document.getElementById('quizEdit').classList.add("d-flex");
       this.quizName = this.returnedData.QuizName;       
-      this.APICall();  
+      console.log(this.fileData);
+     // this.APICall();  
+     this.uploadFile();
 
     },
     EditQuiz(){
