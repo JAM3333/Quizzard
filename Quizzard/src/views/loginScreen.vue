@@ -1,7 +1,7 @@
 <template>
 <v-app>
-    <v-main color="background" class="d-flex align-center justify-center ga-8 mt-20 flex-column" height="100vh">
-            <v-card width="34vw" color="secondary" height="400px" class="d-flex align-center flex-column mr-8" elevation="12">
+    <v-main id="Background" class="d-flex align-center justify-center ga-8 mt-20 flex-column">
+            <v-card width="34vw" color="secondary" height="400px" class="d-flex align-center flex-column mr-16" elevation="12">
                 <v-btn-toggle v-model="toggle_one" mandatory width="34vw">
                     <v-btn @click="pageToLogin()" width="17vw">Login</v-btn>
                     <v-btn @click="pageToSignup()" width="17vw">Sign Up</v-btn>
@@ -85,7 +85,11 @@
    }
    p {
       margin-top: 0px;
-   }                    
+   } 
+
+   #Background {
+      background: url('../assets/bg_login.jpg') no-repeat center center fixed !important;
+   }        
 </style>
  <script>
  export default {
