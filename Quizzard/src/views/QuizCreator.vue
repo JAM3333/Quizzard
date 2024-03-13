@@ -315,19 +315,16 @@ export default {
     CreateQuiz(){
       this.SwitchPage();
       this.quizName = this.returnedData.QuizName;       
-      this.APICall();  
-
+      this.uploadFile();
+      // this.APICall();  
+      console.log(this.fileData);
     },
     SwitchPage(){
       document.getElementById('quizCreate').classList.remove("d-flex");
       document.getElementById('quizCreate').classList.add("d-none");
       document.getElementById('quizEdit').classList.remove("d-none");
       document.getElementById('quizEdit').classList.add("d-flex");
-      this.quizName = this.returnedData.QuizName;       
-      console.log(this.fileData);
-     // this.APICall();  
-     this.uploadFile();
-
+      this.quizName = this.returnedData.QuizName;          
     },
     EditQuiz(){
 
