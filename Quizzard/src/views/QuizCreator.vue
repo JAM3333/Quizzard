@@ -154,14 +154,14 @@ import axios from 'axios';
           </v-expansion-panel>
         </v-expansion-panels>
 
-        <v-btn value="submit" v-on:click="CreateQuiz" class="mt-4 mb-4 text-h3" height="auto" color="button">
+        <v-btn value="submit" v-on:click="GenerateQuiz" class="mt-4 mb-4 text-h3" height="auto" color="button">
           Generate Quiz
         </v-btn>
       </v-card>
       <v-card width="80vw" color="secondary" height="85vh" class="d-none align-center flex-column" id="quizEdit" elevation="12">
         <v-toolbar color="primary" title="Quiz">  
           <v-text-field
-            v-model="quizName"
+            v-model="this.returnedData.QuizName"
             hide-details
             density="compact"
             type="text"
@@ -183,7 +183,7 @@ import axios from 'axios';
           </v-data-iterator>
         </v-card> 
         <v-btn value="submit" v-on:click="CreateQuiz" class="mt-4 mb-4 text-h3" height="auto" color="button">
-          Generate Quiz
+          Create Quiz
         </v-btn>
       </v-card>
     </v-main>
@@ -213,13 +213,31 @@ export default {
     sliderMin: 0,
     sliderMax: 16,
     panel: [0],
-    quizName: "",
     returnedData: 
       {"QuizName": "Your Quiz Name",
       "QuizDifficulty": 0, // easy=0; medium=1; difficult=2
       "AnswerRating": 0, // KI=0; Formulierung=1
       "QuizImage": "image.png",
       "Questions": [
+      {
+          "Question": "Frage 1?",
+          "Type": 1, // Mehrfachauswahl = 1
+          "AnswerRating": 3, // Richtige Antwort ist Answer 3
+          "Answers": {
+            "1": "Salz",
+            "2": "Zucker",
+            "3": "Backsoda",
+            "4": "Wasser"
+          }
+        },
+        {
+          "Question": "Frage 2?",
+          "Type": 0, // Textantwort = 0
+          "AnswerRating": 0,
+          "Answers": {
+            "1": "Viel Wasser"
+          }
+        },
       ]
     }
   }),
@@ -295,14 +313,20 @@ export default {
       .catch(error => {
         console.error('Error uploading file:', error);
     });
-         },
-    CreateQuiz(){
+    },
+    GenerateQuiz(){
       this.SwitchPage();
       this.quizName = this.returnedData.QuizName;       
-      this.uploadFile();
+      //this.uploadFile();
       // this.APICall();  
       console.log(this.fileData);
       console.log(this.returnedData);
+    },
+    async CreateQuiz(){
+      var insertData = await this.ApiGet(`insert into Quizzes (UserIDFK,QuizName,QuizDifficulty,AnswerRating,QuizImage) VALUES (1,'${this.returnedData.QuizName}',${this.returnedData.QuizDifficulty},${this.returnedData.AnswerRating},'https://th.bing.com/th/id/R.385e7dbec0e6c313cfd6dc3b6fff1c95?rik=Ps5ZHpTWtX4y3A&pid=ImgRaw&r=0');`)
+      for (let i=0;i<this.returnedData.Questions.length;i++){
+        await this.ApiGet(`insert into Questions (QuizIDFK,Question,QuestionType,AnswerRating,Answers) VALUES (${insertData.insertId},'${this.returnedData.Questions[i].Question}',${this.returnedData.Questions[i].Type},${this.returnedData.Questions[i].AnswerRating},'${this.returnedData.Questions[i].Answers}');`)
+      } 
     },
     SwitchPage(){
       document.getElementById('quizCreate').classList.remove("d-flex");
@@ -319,19 +343,24 @@ export default {
         this.quizID = this.$route.params.quizID;
         this.SwitchPage();
         var sqlData = await this.ApiGet(`select * from Quizzes where QuizID=`+this.quizID);
-        this.quizName = sqlData.QuizName;
-        this.returnedData.QuizName = sqlData.QuizName;
-        this.returnedData.QuizDifficulty = sqlData.QuizDifficulty;
-        this.returnedData.AnswerRating = sqlData.AnswerRating;
-        this.returnedData.QuizImage = sqlData.QuizImage;
-        sqlData = await this.ApiGet( `select * from Questions where QuizIDFK=`+this.quizID);
-        for (let i=0;i<sqlData.length;i++){
-          let obj =  {  "Question": sqlData[i].Question,
-                        "Type": sqlData[i].QuestionType,
-                        "AnswerRating":  sqlData[i].AnswerRating,
-                        "Answers": JSON.parse(sqlData[i].Answers)};
-          console.log(obj)
-          this.returnedData.Questions[i] = obj;
+        if (sqlData[0].UserIDFK == 1){
+          sqlData = sqlData[0]
+          this.quizName = sqlData.QuizName;
+          this.returnedData.QuizName = sqlData.QuizName;
+          console.log(sqlData.QuizName);
+          console.log(this.returnedData.QuizName)
+          this.returnedData.QuizDifficulty = sqlData.QuizDifficulty;
+          this.returnedData.AnswerRating = sqlData.AnswerRating;
+          this.returnedData.QuizImage = sqlData.QuizImage;
+          sqlData = await this.ApiGet( `select * from Questions where QuizIDFK=`+this.quizID);
+          for (let i=0;i<sqlData.length;i++){
+            let obj =  {  "Question": sqlData[i].Question,
+                          "Type": sqlData[i].QuestionType,
+                          "AnswerRating":  sqlData[i].AnswerRating,
+                          "Answers": JSON.parse(sqlData[i].Answers)};
+            this.returnedData.Questions[i] = obj;
+          }
+     
         }
           
         console.log(this.returnedData)
