@@ -182,8 +182,11 @@ import axios from 'axios';
             </template>
           </v-data-iterator>
         </v-card> 
-        <v-btn value="submit" v-on:click="CreateQuiz" class="mt-4 mb-4 text-h3" height="auto" color="button">
+        <v-btn v-if="mode==0" value="submit" v-on:click="CreateQuiz" class="mt-4 mb-4 text-h3" height="auto" color="button">
           Create Quiz
+        </v-btn>
+        <v-btn v-else value="submit" v-on:click="EditQuiz" class="mt-4 mb-4 text-h3" height="auto" color="button">
+          Edit Quiz
         </v-btn>
       </v-card>
     </v-main>
@@ -202,6 +205,7 @@ export default {
     this.Initialize();
   },
   data: () => ({
+    mode: 0, //0=create; 1 = edit
     update: false,
     quizID: -1,
     fileData: [],
@@ -323,10 +327,15 @@ export default {
       console.log(this.returnedData);
     },
     async CreateQuiz(){
-      var insertData = await this.ApiGet(`insert into Quizzes (UserIDFK,QuizName,QuizDifficulty,AnswerRating,QuizImage) VALUES (1,'${this.returnedData.QuizName}',${this.returnedData.QuizDifficulty},${this.returnedData.AnswerRating},'https://th.bing.com/th/id/R.385e7dbec0e6c313cfd6dc3b6fff1c95?rik=Ps5ZHpTWtX4y3A&pid=ImgRaw&r=0');`)
-      for (let i=0;i<this.returnedData.Questions.length;i++){
-        await this.ApiGet(`insert into Questions (QuizIDFK,Question,QuestionType,AnswerRating,Answers) VALUES (${insertData.insertId},'${this.returnedData.Questions[i].Question}',${this.returnedData.Questions[i].Type},${this.returnedData.Questions[i].AnswerRating},'${this.returnedData.Questions[i].Answers}');`)
+      if (this.mode==0){
+        var insertData = await this.ApiGet(`insert into Quizzes (UserIDFK,QuizName,QuizDifficulty,AnswerRating,QuizImage) VALUES (1,'${this.returnedData.QuizName}',${this.returnedData.QuizDifficulty},${this.returnedData.AnswerRating},'https://th.bing.com/th/id/R.385e7dbec0e6c313cfd6dc3b6fff1c95?rik=Ps5ZHpTWtX4y3A&pid=ImgRaw&r=0');`)
+        for (let i=0;i<this.returnedData.Questions.length;i++){
+          await this.ApiGet(`insert into Questions (QuizIDFK,Question,QuestionType,AnswerRating,Answers) VALUES (${insertData.insertId},'${this.returnedData.Questions[i].Question}',${this.returnedData.Questions[i].Type},${this.returnedData.Questions[i].AnswerRating},'${this.returnedData.Questions[i].Answers}');`)
+        } 
       } 
+    },
+    async EditQuiz(){
+
     },
     SwitchPage(){
       document.getElementById('quizCreate').classList.remove("d-flex");
@@ -340,6 +349,7 @@ export default {
     },
     async Initialize(){
       if(this.$route.params.quizID){
+        this.mode = 1;
         this.quizID = this.$route.params.quizID;
         this.SwitchPage();
         var sqlData = await this.ApiGet(`select * from Quizzes where QuizID=`+this.quizID);
@@ -366,6 +376,8 @@ export default {
         console.log(this.returnedData)
         this.update = true;
         this.update = false;
+      } else {
+        this.mode=0;
       };
     },
     async ApiGet(query){
