@@ -182,11 +182,12 @@ import axios from 'axios';
             </template>
           </v-data-iterator>
         </v-card> 
-        <v-btn value="submit" class="mt-4 mb-4 text-h3" height="auto" color="button">
+        <v-btn value="submit" v-on:click="CreateQuiz" class="mt-4 mb-4 text-h3" height="auto" color="button">
           Generate Quiz
         </v-btn>
       </v-card>
     </v-main>
+    <input id="update" v-model="update" type="bool">
   </v-app>
 </template>
 
@@ -201,6 +202,7 @@ export default {
     this.Initialize();
   },
   data: () => ({
+    update: false,
     quizID: -1,
     fileData: [],
     customInstructions: "",
@@ -212,30 +214,12 @@ export default {
     sliderMax: 16,
     panel: [0],
     quizName: "",
-    sqlData: {},
-    returnedData: {
-      "QuizName": "Kulinarische Fähigkeiten Herausforderung",
-      "QuizDifficulty": 0, // Einfach=0; Mittel=1; Schwierig=2
+    returnedData: 
+      {"QuizName": "Your Quiz Name",
+      "QuizDifficulty": 0, // easy=0; medium=1; difficult=2
       "AnswerRating": 0, // KI=0; Formulierung=1
-      "QuizImage": "koch-thema-bild.png",
+      "QuizImage": "image.png",
       "Questions": [
-        {
-          "Question": "Welches dieser Mittel ist ein Treibmittel beim Backen?",
-          "Type": 1, // Mehrfachauswahl = 1
-          "AnswerRating": 3, // Richtige Antwort ist "Backsoda" + 1
-          "Answers": {
-            "1": "Salz",
-            "2": "Zucker",
-            "3": "Backsoda",
-            "4": "Wasser"
-          }
-        },    
-        {
-          "Question": "Beschreibe den Prozess des Karamellisierens von Zwiebeln.",
-          "Type": 0, // Text = 0
-          "AnswerRating": 0,
-          "Answers": {"1": "Langsames Kochen von Zwiebeln, bis sie tiefbraun und gesüßt sind"}
-        },
       ]
     }
   }),
@@ -318,6 +302,7 @@ export default {
       this.uploadFile();
       // this.APICall();  
       console.log(this.fileData);
+      console.log(this.returnedData);
     },
     SwitchPage(){
       document.getElementById('quizCreate').classList.remove("d-flex");
@@ -333,32 +318,38 @@ export default {
       if(this.$route.params.quizID){
         this.quizID = this.$route.params.quizID;
         this.SwitchPage();
-        this.ApiGet(`select * from Quizzes where QuizID=`+this.quizID);
-        
-        this.quizName = this.sqlData.QuizName;
-        this.returnedData.QuizName = this.sqlData.QuizName;
-        this.returnedData.QuizDifficulty = this.sqlData.QuizDifficulty;
-        this.returnedData.AnswerRating = this.sqlData.AnswerRating;
-        this.returnedData.QuizImage = this.sqlData.QuizImage;
-        this.ApiGet( `select * from Questions where QuizIDFK=`+this.quizID);
-        for (let i=0;i<=this.sqlData.length;i++){
-            this.returnedData.Answers[i].Question = this.sqlData[i].Question;
-            this.returnedData.Answers[i].Type = this.sqlData[i].QuestionType;
-            this.returnedData.Answers[i].AnswerRating = this.sqlData[i].AnswerRating;
-            this.ApiGet( `select * from Answers where AnswerID=`+i);
+        var sqlData = await this.ApiGet(`select * from Quizzes where QuizID=`+this.quizID);
+        this.quizName = sqlData.QuizName;
+        this.returnedData.QuizName = sqlData.QuizName;
+        this.returnedData.QuizDifficulty = sqlData.QuizDifficulty;
+        this.returnedData.AnswerRating = sqlData.AnswerRating;
+        this.returnedData.QuizImage = sqlData.QuizImage;
+        sqlData = await this.ApiGet( `select * from Questions where QuizIDFK=`+this.quizID);
+        for (let i=0;i<sqlData.length;i++){
+          let obj =  {  "Question": sqlData[i].Question,
+                        "Type": sqlData[i].QuestionType,
+                        "AnswerRating":  sqlData[i].AnswerRating,
+                        "Answers": JSON.parse(sqlData[i].Answers)};
+          console.log(obj)
+          this.returnedData.Questions[i] = obj;
         }
+          
+        console.log(this.returnedData)
+        this.update = true;
+        this.update = false;
       };
     },
     async ApiGet(query){
-      this.sqlData = {};
-      axios.get(`${apiUrl}/sql?format=json`,{params: {sqlQuery:query}}).then((response) => {    
-        this.sqlData = response.data;
-        console.log("answer from server::",this.sqlData);
+      let sqlData = {}
+      await axios.get(`${apiUrl}/sql?format=json`,{params: {sqlQuery:query}}).then((response) => {    
+        console.log("answer from server::",response.data);
+        sqlData = response.data
       })
       .catch((error) => {
         console.log("error recieved");
         console.error("Error with the GET request:", error)
       })
+      return sqlData
     }
   },
 };
