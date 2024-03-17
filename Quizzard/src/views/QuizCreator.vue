@@ -4,14 +4,15 @@ import QuestionCard from "../components/QuestionCard.vue";
 import OpenAI from "openai";
 import { OPENAI_API_KEY } from '../config';
 import axios from 'axios';
-
+import QuestionClass from "../classes/QuestionClass.js";
 </script>
 
 <template>
   <v-app>
     <SideBar></SideBar>
     <v-main color="background" class="d-flex align-center justify-center">
-      <v-card width="80vw" color="secondary" height="85vh" class="d-flex align-center flex-column" id="quizCreate" elevation="12">
+      <v-card width="80vw" color="secondary" height="fit-content" class="d-flex align-center flex-column
+" id="quizCreate" elevation="12">
         <v-toolbar color="primary" title="Create your Quiz"></v-toolbar>
         <v-card width="80vw" outlined color="transparent" class="mt-5 mb-4">
           <v-toolbar
@@ -161,7 +162,7 @@ import axios from 'axios';
       <v-card width="80vw" color="secondary" height="85vh" class="d-none align-center flex-column" id="quizEdit" elevation="12">
         <v-toolbar color="primary" title="Quiz">  
           <v-text-field
-            v-model="this.returnedData.QuizName"
+            v-model="returnedData.QuizName"
             hide-details
             density="compact"
             type="text"
@@ -169,18 +170,14 @@ import axios from 'axios';
           ></v-text-field>
         </v-toolbar> 
         <v-card width="80vw" height="80vh" style="background-color: rgba(255, 255, 255, 0) !important; border-color: white !important" class="mt-5 mb-4 overflow-y-auto">
-          <v-data-iterator :items="returnedData.Questions">
-            <template v-slot:default="{ items }">
-                  <v-expansion-panels  class="overflow-y-auto" v-for="item in items" :key="item.title" cols="auto">
-                    <QuestionCard class="fill-height mt-3"
-                      :question="item.raw.Question"
-                      :type="item.raw.Type"
-                      :answerRating="item.raw.AnswerRating"
-                      :answers="item.raw.Answers"
-                    ></QuestionCard>
-                  </v-expansion-panels>
-            </template>
-          </v-data-iterator>
+          <v-expansion-panels >
+            <QuestionCard class="fill-height mt-3" v-for="item in returnedData.Questions" :key="item.title" cols="auto"
+              :question="item.Question"
+              :type="item.Type"
+              :answerRating="item.AnswerRating"
+              :answers="item.Answers"
+            ></QuestionCard>
+          </v-expansion-panels>
         </v-card> 
         <v-btn v-if="mode==0" value="submit" v-on:click="CreateQuiz" class="mt-4 mb-4 text-h3" height="auto" color="button">
           Create Quiz
@@ -222,27 +219,7 @@ export default {
       "QuizDifficulty": 0, // easy=0; medium=1; difficult=2
       "AnswerRating": 0, // KI=0; Formulierung=1
       "QuizImage": "image.png",
-      "Questions": [
-      {
-          "Question": "Frage 1?",
-          "Type": 1, // Mehrfachauswahl = 1
-          "AnswerRating": 3, // Richtige Antwort ist Answer 3
-          "Answers": {
-            "1": "Salz",
-            "2": "Zucker",
-            "3": "Backsoda",
-            "4": "Wasser"
-          }
-        },
-        {
-          "Question": "Frage 2?",
-          "Type": 0, // Textantwort = 0
-          "AnswerRating": 0,
-          "Answers": {
-            "1": "Viel Wasser"
-          }
-        },
-      ]
+      "Questions": []
     }
   }),
   methods: {
@@ -320,11 +297,11 @@ export default {
     },
     GenerateQuiz(){
       this.SwitchPage();
-      this.quizName = this.returnedData.QuizName;       
+      this.quizName = this.returnedData.QuizName;    
+      this.returnedData.Questions.push(new QuestionClass("Wie backt man Fisch?",1,3,["Salz","Zucker","Backsoda","Wasser"]));   
+      this.returnedData.Questions.push(new QuestionClass("Mit was sollte man Fisch backen?",0,1,["Salz"]));   
       //this.uploadFile();
       // this.APICall();  
-      console.log(this.fileData);
-      console.log(this.returnedData);
     },
     async CreateQuiz(){
       if (this.mode==0){
