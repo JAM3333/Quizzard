@@ -2,9 +2,7 @@
 import SideBar from "../components/Navbar.vue";
 import QuestionCard from "../components/QuestionCard.vue";
 import OpenAI from "openai";
-import { OPENAI_API_KEY } from '../config';
 import axios from 'axios';
-
 </script>
 
 <template>
@@ -200,6 +198,7 @@ export default {
   
   mounted(){
     this.Initialize();
+   
   },
   data: () => ({
     update: false,
@@ -241,8 +240,10 @@ export default {
       }
     },
     APICall(){
-      const openai = new OpenAI({ apiKey: OPENAI_API_KEY, dangerouslyAllowBrowser: true });
-      
+       //WICHTIG !!!!!!!!!!
+      //console.log(import.meta.env.VITE_API_KEY);
+      const openai = new OpenAI({ apiKey: import.meta.env.VITE_API_KEY, dangerouslyAllowBrowser: true });
+
       async function main() {
         const completion = await openai.chat.completions.create({
           messages: [{ role: "system", content: `Generate a quiz from the attached file and the following instructions: ${this.customInstructions}. Create ${this.sliderText} Text-Questions and ${sliderMultipleChoice} Multiple-choice-questions with a difficulty of ${this.difSelectedButton} using the following json format (Example):   {"QuizName": "Name",
@@ -300,7 +301,7 @@ export default {
       this.SwitchPage();
       this.quizName = this.returnedData.QuizName;       
       this.uploadFile();
-      // this.APICall();  
+      //this.APICall();  
       console.log(this.fileData);
       console.log(this.returnedData);
     },
