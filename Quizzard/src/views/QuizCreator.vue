@@ -4,14 +4,14 @@ import QuestionCard from "../components/QuestionCard.vue";
 import OpenAI from "openai";
 import axios from 'axios';
 import QuestionClass from "../classes/QuestionClass.js";
+import AxiosGet from "../JavaScript/AxiosGet.js";
 </script>
 
 <template>
   <v-app>
     <SideBar></SideBar>
     <v-main color="background" class="d-flex align-center justify-center">
-      <v-card width="80vw" color="secondary" height="fit-content" class="d-flex align-center flex-column
-" id="quizCreate" elevation="12">
+      <v-card width="80vw" color="secondary" height="fit-content" class="d-flex align-center flex-column" id="quizCreate" elevation="12">
         <v-toolbar color="primary" title="Create your Quiz"></v-toolbar>
         <v-card width="80vw" outlined color="transparent" class="mt-5 mb-4">
           <v-toolbar
@@ -154,7 +154,7 @@ import QuestionClass from "../classes/QuestionClass.js";
           </v-expansion-panel>
         </v-expansion-panels>
 
-        <v-btn value="submit" v-on:click="GenerateQuiz" class="mt-4 mb-4 text-h3" height="auto" color="button">
+        <v-btn value="submit" v-on:click="GenerateQuiz"   :disabled="loading" :loading="loading" class="mt-4 mb-2 text-h3" height="auto" color="button">
           Generate Quiz
         </v-btn>
       </v-card>
@@ -178,12 +178,13 @@ import QuestionClass from "../classes/QuestionClass.js";
             ></QuestionCard>
           </v-expansion-panels>
         </v-card> 
-        <v-btn v-if="mode==0" value="submit" v-on:click="CreateQuiz" class="mt-4 mb-4 text-h3" height="auto" color="button">
+        <v-btn v-if="mode==0" value="submit" :disabled="loading" :loading="loading" v-on:click="CreateQuiz" class="mt-4 mb-2 text-h3" height="auto" color="button">
           Create Quiz
         </v-btn>
-        <v-btn v-else value="submit" v-on:click="EditQuiz" class="mt-4 mb-4 text-h3" height="auto" color="button">
+        <v-btn v-else value="submit" :disabled="loading" :loading="loading" v-on:click="EditQuiz" class="mt-4 mb-2 text-h3" height="auto" color="button">
           Edit Quiz
         </v-btn>
+        <p class="mb-3">{{ loadingMessage }}</p>
       </v-card>
     </v-main>
     <input id="update" v-model="update" type="bool">
@@ -191,9 +192,6 @@ import QuestionClass from "../classes/QuestionClass.js";
 </template>
 
 <script>
-import axios from "axios";
-
-const apiUrl = "http://10.115.2.40:3004";
 
 export default {
   
@@ -202,6 +200,8 @@ export default {
    
   },
   data: () => ({
+    loadingMessage:"",
+    loading: false,
     mode: 0, //0=create; 1 = edit
     update: false,
     quizID: -1,
@@ -239,12 +239,13 @@ export default {
         console.log(this.fileData);
       }
     },
-    APICall(){
+    async APICall(){
        //WICHTIG !!!!!!!!!!
       //console.log(import.meta.env.VITE_API_KEY);
       const openai = new OpenAI({ apiKey: import.meta.env.VITE_API_KEY, dangerouslyAllowBrowser: true });
 
       async function main() {
+        this.loadingMessage = "Sending prompt...";
         const completion = await openai.chat.completions.create({
           messages: [{ role: "system", content: `Generate a quiz from the attached file and the following instructions: ${this.customInstructions}. Create ${this.sliderText} Text-Questions and ${sliderMultipleChoice} Multiple-choice-questions with a difficulty of ${this.difSelectedButton} using the following json format (Example):   {"QuizName": "Name",
       "QuizDifficulty": 0, // easy=0; medium=1; difficult=2
@@ -281,36 +282,46 @@ export default {
       main();
     },
     uploadFile() {
-    const formData = new FormData();
-    let fileUploadLength = this.$refs.fileUpload.files.length;
+      const formData = new FormData();
+      let fileUploadLength = this.$refs.fileUpload.files.length;
 
-    for(let i=0;i<fileUploadLength;i++)
-    {
-      formData.append('file', this.$refs.fileUpload.files[i]);
-    }
+      for(let i=0;i<fileUploadLength;i++)
+      {
+        formData.append('file', this.$refs.fileUpload.files[i]);
+      }
 
-    axios.post('http://10.115.2.38:3002/api/Upload', formData)
-      .then(response => {
-        console.log(response.data);
-    })
-      .catch(error => {
-        console.error('Error uploading file:', error);
-    });
+      axios.post('http://10.115.2.38:3002/api/Upload', formData)
+        .then(response => {
+          console.log(response.data);
+      })
+        .catch(error => {
+          console.error('Error uploading file:', error);
+      });
     },
-    GenerateQuiz(){
-      this.SwitchPage();
+    async GenerateQuiz(){
+      this.loading = true
+      this.loadingMessage = "Generating Quiz...";
       this.quizName = this.returnedData.QuizName;    
       this.returnedData.Questions.push(new QuestionClass("Wie backt man Fisch?",1,3,["Salz","Zucker","Backsoda","Wasser"]));   
       this.returnedData.Questions.push(new QuestionClass("Mit was sollte man Fisch backen?",0,1,["Salz"]));   
       //this.uploadFile();
-      // this.APICall();  
+      // await this.APICall(); 
+      this.SwitchPage();
+      this.loading = false
+      this.loadingMessage = "";
     },
     async CreateQuiz(){
       if (this.mode==0){
-        var insertData = await this.ApiGet(`insert into Quizzes (UserIDFK,QuizName,QuizDifficulty,AnswerRating,QuizImage) VALUES (1,'${this.returnedData.QuizName}',${this.returnedData.QuizDifficulty},${this.returnedData.AnswerRating},'https://th.bing.com/th/id/R.385e7dbec0e6c313cfd6dc3b6fff1c95?rik=Ps5ZHpTWtX4y3A&pid=ImgRaw&r=0');`)
+        this.loading = true;
+        this.loadingMessage = "Creating Quiz...";
+        var insertData = await AxiosGet(`insert into Quizzes (UserIDFK,QuizName,QuizDifficulty,AnswerRating,QuizImage) VALUES (1,'${this.returnedData.QuizName}',${this.returnedData.QuizDifficulty},${this.returnedData.AnswerRating},'https://th.bing.com/th/id/R.385e7dbec0e6c313cfd6dc3b6fff1c95?rik=Ps5ZHpTWtX4y3A&pid=ImgRaw&r=0');`)
+        //var insertData = await this.ApiGet(`insert into Quizzes (UserIDFK,QuizName,QuizDifficulty,AnswerRating,QuizImage) VALUES (1,'${this.returnedData.QuizName}',${this.returnedData.QuizDifficulty},${this.returnedData.AnswerRating},'https://th.bing.com/th/id/R.385e7dbec0e6c313cfd6dc3b6fff1c95?rik=Ps5ZHpTWtX4y3A&pid=ImgRaw&r=0');`)
         for (let i=0;i<this.returnedData.Questions.length;i++){
-          await this.ApiGet(`insert into Questions (QuizIDFK,Question,QuestionType,AnswerRating,Answers) VALUES (${insertData.insertId},'${this.returnedData.Questions[i].Question}',${this.returnedData.Questions[i].Type},${this.returnedData.Questions[i].AnswerRating},'${this.returnedData.Questions[i].Answers}');`)
+          this.loadingMessage = "Creating Question "+(parseInt(i)+1)+"...";
+          await AxiosGet(`insert into Questions (QuizIDFK,Question,QuestionType,AnswerRating,Answers) VALUES (${insertData.insertId},'${this.returnedData.Questions[i].Question}',${this.returnedData.Questions[i].Type},${this.returnedData.Questions[i].AnswerRating},'${this.returnedData.Questions[i].Answers}');`)
         } 
+        this.loading = false
+        this.$router.push({ name: 'Home'});
       } 
     },
     async EditQuiz(){
@@ -322,9 +333,6 @@ export default {
       document.getElementById('quizEdit').classList.remove("d-none");
       document.getElementById('quizEdit').classList.add("d-flex");
       this.quizName = this.returnedData.QuizName;          
-    },
-    EditQuiz(){
-
     },
     async Initialize(){
       if(this.$route.params.quizID){
@@ -359,18 +367,6 @@ export default {
         this.mode=0;
       };
     },
-    async ApiGet(query){
-      let sqlData = {}
-      await axios.get(`${apiUrl}/sql?format=json`,{params: {sqlQuery:query}}).then((response) => {    
-        console.log("answer from server::",response.data);
-        sqlData = response.data
-      })
-      .catch((error) => {
-        console.log("error recieved");
-        console.error("Error with the GET request:", error)
-      })
-      return sqlData
-    }
   },
 };
 </script>

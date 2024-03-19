@@ -65,6 +65,9 @@ export default {
     handleInput (e) {
       console.log(this.answers)
       console.log(e)
+    },
+    removeQuiz() {
+
     }
   }
 }
