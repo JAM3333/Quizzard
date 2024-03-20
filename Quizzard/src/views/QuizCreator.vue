@@ -339,7 +339,7 @@ export default {
         this.mode = 1;
         this.quizID = this.$route.params.quizID;
         this.SwitchPage();
-        var sqlData = await this.ApiGet(`select * from Quizzes where QuizID=`+this.quizID);
+        var sqlData = await AxiosGet(`select * from Quizzes where QuizID=`+this.quizID);
         if (sqlData[0].UserIDFK == 1){
           sqlData = sqlData[0]
           this.quizName = sqlData.QuizName;
@@ -349,7 +349,7 @@ export default {
           this.returnedData.QuizDifficulty = sqlData.QuizDifficulty;
           this.returnedData.AnswerRating = sqlData.AnswerRating;
           this.returnedData.QuizImage = sqlData.QuizImage;
-          sqlData = await this.ApiGet( `select * from Questions where QuizIDFK=`+this.quizID);
+          sqlData = await AxiosGet( `select * from Questions where QuizIDFK=`+this.quizID);
           for (let i=0;i<sqlData.length;i++){
             let obj =  {  "Question": sqlData[i].Question,
                           "Type": sqlData[i].QuestionType,

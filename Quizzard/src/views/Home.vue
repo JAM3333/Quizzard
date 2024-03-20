@@ -38,6 +38,7 @@
                 <v-row dense>
                   <v-col v-for="item in items" :key="item.title" cols="auto">
                     <QuizCard class="fill-height"
+                      :initFunction="Initialize"
                       :name="item.raw.QuizName"
                       :image="item.raw.QuizImage"
                       :id="item.raw.QuizID"
