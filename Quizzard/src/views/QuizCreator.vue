@@ -170,9 +170,11 @@ import AxiosGet from "../JavaScript/AxiosGet.js";
         </v-toolbar> 
         <v-card width="80vw" height="80vh" style="background-color: rgba(255, 255, 255, 0) !important; border-color: white !important" class="mt-5 mb-4 overflow-y-auto">
           <v-expansion-panels >
-            <QuestionCard class="fill-height mt-3" v-for="item in returnedData.Questions" :key="item.title" cols="auto"
+            <QuestionCard class="fill-height mt-3" v-for="(item, index) in returnedData.Questions" :key="item.title" cols="auto"
               :updateQuestion="UpdateQuestion"
+              :removeQuestion="RemoveQuestion"
               :question="item.Question"
+              :index="index"
               :type="item.Type"
               :answerRating="item.AnswerRating"
               :answers="item.Answers"
@@ -313,6 +315,7 @@ export default {
     },
     async CreateQuiz(){
       if (this.mode==0){
+        console.log(this.returnedData)
         this.loading = true;
         this.loadingMessage = "Creating Quiz...";
         var insertData = await AxiosGet(`insert into Quizzes (UserIDFK,QuizName,QuizDifficulty,AnswerRating,QuizImage) VALUES (1,'${this.returnedData.QuizName}',${this.returnedData.QuizDifficulty},${this.returnedData.AnswerRating},'https://th.bing.com/th/id/R.385e7dbec0e6c313cfd6dc3b6fff1c95?rik=Ps5ZHpTWtX4y3A&pid=ImgRaw&r=0');`)
@@ -368,8 +371,14 @@ export default {
         this.mode=0;
       };
     },
-    UpdateQuestions(){
-
+    UpdateQuestion(index,question,answerRating,answers){
+      this.returnedData.Questions[index].Question = question;
+      this.returnedData.Questions[index].AnswerRating = answerRating;
+      this.returnedData.Questions[index].Answers = answers;
+      console.log(answers)
+    },
+    RemoveQuestion(index){
+      this.returnedData.Questions.splice(index,1);
     }
   },
 };

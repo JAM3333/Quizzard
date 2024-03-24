@@ -1,3 +1,7 @@
+<script setup>
+  import QuizCreator from "../views/QuizCreator.vue";
+</script>
+
 <template>
   <v-expansion-panel
     color="primary"
@@ -6,50 +10,60 @@
       <v-btn
         class="mr-2"
         icon="mdi-delete"
-        v-bind="popup"
-        color="#933"
-        @click="popup = true"
-        @click.stop="handleButtonClick"
+        color="#933"       
+        @click.stop="removeQuestion(index)"
       ></v-btn>
       <v-text-field
-        :model-value="question"
-        @input="handleInput"
+        v-model="questionNew"
         hide-details
-        @click.stop="handleButtonClick"
+        @input.stop="updateQuestion(index,questionNew,answerRatingNew,answersNew)"
         density="compact"
         type="text"
         class="mr-4"
       ></v-text-field>
-      <v-card v-if="answerRating<=1" class="d-flex mr-3 align-center">
+      <v-card v-if="type==0" class="d-flex mr-3 align-center">
         <v-spacer></v-spacer>
         <v-btn-toggle
           rounded="4"
           color="button"
           v-model="answerRatingNew"
-          @click.stop="handleButtonClick"
+          @click.stop="updateQuestion(index,questionNew,answerRatingNew,answersNew)"
           group
           mandatory
         >
-          <v-btn value="0"> Content (AI) </v-btn>
-          <v-btn value="1"> Exact (Wording) </v-btn>
+          <v-btn value:0> Content (AI) </v-btn>
+          <v-btn value:1> Exact (Wording) </v-btn>
         </v-btn-toggle>
       </v-card>
     </v-expansion-panel-title>
     <v-expansion-panel-text>
-      <v-text-field v-for="(item, index) in this.answers" :key="item"
-        :label="`Answer ${index+1}`"
-        :model-value="item"
-        @input="handleInput"
-      ></v-text-field> 
+      <div class="d-flex flex-row .justify-space-between" v-for="(item, indexAnswer) in answersNew" :key="item">
+        <v-text-field class="flex-grow-1"
+        :label="`Answer ${indexAnswer+1}`"
+        v-model="answersNew[indexAnswer]"
+        @input.stop="updateQuestion(index,questionNew,answerRatingNew,answersNew)"
+        ></v-text-field> 
+        <v-checkbox v-if="type==1" class="flex-grow-0 ml-2" :value=indexAnswer+1 v-model="answerRatingNew" @input="updateAnswerRating"
+        ></v-checkbox>
+      </div>
     </v-expansion-panel-text>
   </v-expansion-panel>
 </template>
    
 <script>
+
 export default {
   props: {
     updateQuestion: {
       type: Function,
+      required: true,
+    },
+    removeQuestion: {
+      type: Function,
+      required: true,
+    },
+    index: {
+      type: Number,
       required: true,
     },
     question: {
@@ -69,17 +83,22 @@ export default {
       required: false,
     },
   },
+  mounted(){
+    this.questionNew = this.question;
+    this.answerRatingNew = this.answerRating;
+    this.answersNew = this.answers;
+    console.log(this.answersNew)
+  },
   data: () => ({
-    answerRatingNew:"0",
-    answersData: "this.answers",
+    answerRatingNew:0,
+    answersNew: {},
     questionNew: "",
   }),
   methods: {
-    handleInput (e) {
-      console.log(this.answers)
-      console.log(e)
-    },
-    removeQuiz() {
+    updateAnswerRating(){
+      if (!this.answerRatingNew){
+        this.answerRatingNew = 1
+      }
     }
   }
 }
