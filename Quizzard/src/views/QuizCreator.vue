@@ -171,6 +171,7 @@ import AxiosGet from "../JavaScript/AxiosGet.js";
         <v-card width="80vw" height="80vh" style="background-color: rgba(255, 255, 255, 0) !important; border-color: white !important" class="mt-5 mb-4 overflow-y-auto">
           <v-expansion-panels >
             <QuestionCard class="fill-height mt-3" v-for="item in returnedData.Questions" :key="item.title" cols="auto"
+              :updateQuestion="UpdateQuestion"
               :question="item.Question"
               :type="item.Type"
               :answerRating="item.AnswerRating"
@@ -367,6 +368,9 @@ export default {
         this.mode=0;
       };
     },
+    UpdateQuestions(){
+
+    }
   },
 };
 </script>

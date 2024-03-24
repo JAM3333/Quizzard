@@ -3,10 +3,19 @@
     color="primary"
   >
     <v-expansion-panel-title>
+      <v-btn
+        class="mr-2"
+        icon="mdi-delete"
+        v-bind="popup"
+        color="#933"
+        @click="popup = true"
+        @click.stop="handleButtonClick"
+      ></v-btn>
       <v-text-field
         :model-value="question"
         @input="handleInput"
         hide-details
+        @click.stop="handleButtonClick"
         density="compact"
         type="text"
         class="mr-4"
@@ -17,6 +26,7 @@
           rounded="4"
           color="button"
           v-model="answerRatingNew"
+          @click.stop="handleButtonClick"
           group
           mandatory
         >
@@ -38,6 +48,10 @@
 <script>
 export default {
   props: {
+    updateQuestion: {
+      type: Function,
+      required: true,
+    },
     question: {
       type: String,
       required: true,
@@ -58,7 +72,6 @@ export default {
   data: () => ({
     answerRatingNew:"0",
     answersData: "this.answers",
-    answerSelectedButton: "content",
     questionNew: "",
   }),
   methods: {
@@ -67,7 +80,6 @@ export default {
       console.log(e)
     },
     removeQuiz() {
-
     }
   }
 }
