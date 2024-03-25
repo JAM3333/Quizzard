@@ -5,17 +5,17 @@
 <template>
   <v-app>
     <SideBar></SideBar>
-    <v-main color="background" class="d-flex align-center justify-center ga-8 mt-20 flex-column" height="100vh">
+    <v-main id="Background" color="background" class="d-flex align-center justify-center ga-8 mt-20 flex-column " height="100vh">
       <div class="d-flex align-center justify-space-between">
-        <v-card width="34vw" color="secondary" height="40vh" class="d-flex align-center flex-column mr-8" elevation="12">
+        <v-card width="34vw"  id="BgTransparent" height="40vh" class="d-flex align-center flex-column mr-8" elevation="12">
           <v-toolbar color="primary" class="text-h1" title="Recommendation 1"></v-toolbar>
         </v-card>
-        <v-card width="34vw" color="secondary" height="40vh" class="d-flex align-center flex-column" elevation="12">
+        <v-card width="34vw" id="BgTransparent" height="40vh" class="d-flex align-center flex-column" elevation="12">
           <v-toolbar color="primary" title="Recommendation 2"></v-toolbar>
         </v-card>
     </div>
     <div class="d-flex align-center justify-center ga-8">
-        <v-card width="70vw" color="secondary" height="fit-content" elevation="12">
+        <v-card id="BgTransparent" width="70vw"  height="fit-content" elevation="12">
           <v-data-iterator :items="quizData" :items-per-page="4" :search="search" >
             <template v-slot:header>
               <v-toolbar color="primary" title="Your Library" >
@@ -114,9 +114,16 @@ export default {
 
   }
 };
-
-
 </script>
+
+<style>
+  #Background {
+      background: url('../assets/bg_login_modified_dark.jpg') no-repeat center center fixed !important;
+   }      
+   #BgTransparent{
+    background-color: #3e3e3ed5;
+   }  
+</style>
 
 
 

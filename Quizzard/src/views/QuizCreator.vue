@@ -8,157 +8,159 @@ import AxiosGet from "../JavaScript/AxiosGet.js";
 </script>
 
 <template>
-  <v-app>
+  <v-app id="Background">
     <SideBar></SideBar>
-    <v-main color="background" class="d-flex align-center justify-center">
-      <v-card width="80vw" color="secondary" height="fit-content" class="d-flex align-center flex-column" id="quizCreate" elevation="12">
+    <v-main class="d-flex align-center justify-center">
+      <v-card width="80vw" height="fit-content" class="d-flex align-center flex-column" id="quizCreate" elevation="12">
         <v-toolbar color="primary" title="Create your Quiz"></v-toolbar>
-        <v-card width="80vw" outlined color="transparent" class="mt-5 mb-4">
-          <v-toolbar
-            class="text-medium-emphasis font-weight-light"
-            color="primary"
-            title="Upload your files"
-          ></v-toolbar>
-          
-          <v-file-input
-            class="mt-4"
-            clearable
-            label="File input"
-            variant="outlined"
-            multiple
-            show-size
-            name="fileo"
-            @change="ReadFiles"
-            ref="fileUpload"
-          ></v-file-input>
-        </v-card>
-        <v-expansion-panels v-model="panel">
-          <v-expansion-panel expand title="Quiz Options" color="primary">
-            <v-expansion-panel-text :style="{background: $vuetify.theme.themes.background}">
-              <v-card class="pa-4 d-flex align-center">
-                <span class="text-medium-emphasis ms-1 font-weight-light">
-                  Quiz Difficulty
-                </span>
+        <v-container width="75vw" height="fit-content" class="d-flex align-center flex-column">
+          <v-card width="75vw" outlined color="transparent" class="mt-5 mb-4">
+            <v-toolbar
+              class="text-medium-emphasis font-weight-light"
+              color="primary"
+              title="Upload your files"
+            ></v-toolbar>
+            
+            <v-file-input
+              class="mt-4"
+              clearable
+              label="File input"
+              variant="outlined"
+              multiple
+              show-size
+              name="fileo"
+              @change="ReadFiles"
+              ref="fileUpload"
+            ></v-file-input>
+          </v-card>
+          <v-expansion-panels v-model="panel" style="min-width: 75vw">
+            <v-expansion-panel expand title="Quiz Options"  color="primary">
+              <v-expansion-panel-text :style="{background: $vuetify.theme.themes.background}">
+                <v-card class="pa-4 d-flex align-center">
+                  <span class="text-medium-emphasis ms-1 font-weight-light">
+                    Quiz Difficulty
+                  </span>
 
-                <v-spacer></v-spacer>
+                  <v-spacer></v-spacer>
 
-                <v-btn-toggle
-                  rounded="4"
-                  color="button"
-                  v-model="difSelectedButton"
-                  group
-                  mandatory
-                >
-                  <v-btn value="easy"> EASY </v-btn>
-
-                  <v-btn value="medium"> MEDIUM </v-btn>
-
-                  <v-btn value="difficult"> DIFFICULT </v-btn>
-                </v-btn-toggle>
-              </v-card>
-              <v-card class="pa-4 d-flex align-center fit-content">
-                <span class="text-medium-emphasis ms-1 font-weight-light">
-                  Question Count
-                </span>
-
-                <v-spacer></v-spacer>
-
-                <v-card class="d-flex mr-4  .justify-space-between flex-column" width="20vw">
-                  <v-toolbar
-                    class="text-medium-emphasis font-weight-light"
-                    color="secondary"
-                    title="Multiple Choice"
-                  ></v-toolbar>
-                  <v-slider
-                    v-model="sliderMultipleChoice"
-                    :max="sliderMax"
-                    :min="sliderMin"
-                    :step="1"
-                    class="pl-2"
-                    hide-details
+                  <v-btn-toggle
+                    rounded="4"
+                    color="button"
+                    v-model="difSelectedButton"
+                    group
+                    mandatory
                   >
-                    <template v-slot:append>
-                      <v-text-field
-                        v-model="sliderMultipleChoice"
-                        hide-details
-                        single-line
-                        :max="sliderMax"
-                        :min="sliderMin"
-                        :step="1"
-                        density="compact"
-                        type="number"
-                        style="width: 5vw"
-                      ></v-text-field>
-                    </template>
-                  </v-slider>                  
-                </v-card>     
-                <v-card class="d-flex mr-4  .justify-space-between flex-column" width="20vw">
-                  <v-toolbar
-                    class="text-medium-emphasis font-weight-light"
-                    color="secondary"
-                    title="Text"
-                  ></v-toolbar>
-                  <v-slider
-                    v-model="sliderText"
-                    :max="sliderMax"
-                    :min="sliderMin"
-                    :step="1"
-                    class="pl-2"
-                    hide-details
+                    <v-btn value="easy"> EASY </v-btn>
+
+                    <v-btn value="medium"> MEDIUM </v-btn>
+
+                    <v-btn value="difficult"> DIFFICULT </v-btn>
+                  </v-btn-toggle>
+                </v-card>
+                <v-card class="pa-4 d-flex align-center fit-content">
+                  <span class="text-medium-emphasis ms-1 font-weight-light">
+                    Question Count
+                  </span>
+
+                  <v-spacer></v-spacer>
+
+                  <v-card class="d-flex mr-4  .justify-space-between flex-column" width="20vw">
+                    <v-toolbar
+                      class="text-medium-emphasis font-weight-light"
+                      color="secondary"
+                      title="Multiple Choice"
+                    ></v-toolbar>
+                    <v-slider
+                      v-model="sliderMultipleChoice"
+                      :max="sliderMax"
+                      :min="sliderMin"
+                      :step="1"
+                      class="pl-2"
+                      hide-details
+                    >
+                      <template v-slot:append>
+                        <v-text-field
+                          v-model="sliderMultipleChoice"
+                          hide-details
+                          single-line
+                          :max="sliderMax"
+                          :min="sliderMin"
+                          :step="1"
+                          density="compact"
+                          type="number"
+                          style="width: 5vw"
+                        ></v-text-field>
+                      </template>
+                    </v-slider>                  
+                  </v-card>     
+                  <v-card class="d-flex mr-4  .justify-space-between flex-column" width="20vw">
+                    <v-toolbar
+                      class="text-medium-emphasis font-weight-light"
+                      color="secondary"
+                      title="Text"
+                    ></v-toolbar>
+                    <v-slider
+                      v-model="sliderText"
+                      :max="sliderMax"
+                      :min="sliderMin"
+                      :step="1"
+                      class="pl-2"
+                      hide-details
+                    >
+                      <template v-slot:append>
+                        <v-text-field
+                          v-model="sliderText"
+                          hide-details
+                          single-line
+                          :max="sliderMax"
+                          :min="sliderMin"
+                          :step="1"
+                          density="compact"
+                          type="number"
+                          style="width: 5vw"
+                        ></v-text-field>
+                      </template>
+                    </v-slider>                  
+                  </v-card>           
+                </v-card>
+                <v-card class="pa-4 d-flex align-center">
+                  <span class="text-medium-emphasis ms-1 font-weight-light">
+                    Answer Rating
+                  </span>
+
+                  <v-spacer></v-spacer>
+
+                  <v-btn-toggle
+                    rounded="4"
+                    color="button"
+                    v-model="answerSelectedButton"
+                    group
+                    mandatory
                   >
-                    <template v-slot:append>
-                      <v-text-field
-                        v-model="sliderText"
-                        hide-details
-                        single-line
-                        :max="sliderMax"
-                        :min="sliderMin"
-                        :step="1"
-                        density="compact"
-                        type="number"
-                        style="width: 5vw"
-                      ></v-text-field>
-                    </template>
-                  </v-slider>                  
-                </v-card>           
-              </v-card>
-              <v-card class="pa-4 d-flex align-center">
-                <span class="text-medium-emphasis ms-1 font-weight-light">
-                  Answer Rating
-                </span>
+                    <v-btn value=0> Content (AI) </v-btn>
 
-                <v-spacer></v-spacer>
+                    <v-btn value=1> Exact (Wording) </v-btn>
+                  </v-btn-toggle>
+                </v-card>
+              </v-expansion-panel-text>
+            </v-expansion-panel>
+            <v-expansion-panel
+              expand
+              title="Custom Instructions"
+              color="primary"
+            >
+              <v-expansion-panel-text>
+                <v-textarea label="Your instructions"></v-textarea>
+              </v-expansion-panel-text>
+            </v-expansion-panel>
+          </v-expansion-panels>
 
-                <v-btn-toggle
-                  rounded="4"
-                  color="button"
-                  v-model="answerSelectedButton"
-                  group
-                  mandatory
-                >
-                  <v-btn value=0> Content (AI) </v-btn>
-
-                  <v-btn value=1> Exact (Wording) </v-btn>
-                </v-btn-toggle>
-              </v-card>
-            </v-expansion-panel-text>
-          </v-expansion-panel>
-          <v-expansion-panel
-            expand
-            title="Custom Instructions"
-            color="primary"
-          >
-            <v-expansion-panel-text>
-              <v-textarea label="Your instructions"></v-textarea>
-            </v-expansion-panel-text>
-          </v-expansion-panel>
-        </v-expansion-panels>
-
-        <v-btn value="submit" v-on:click="GenerateQuiz"   :disabled="loading" :loading="loading" class="mt-4 mb-2 text-h3" height="auto" color="button">
-          Generate Quiz
-        </v-btn>
+          <v-btn value="submit" v-on:click="GenerateQuiz"   :disabled="loading" :loading="loading" class="mt-4 mb-2 text-h3" height="auto" color="button">
+            Generate Quiz
+          </v-btn>
+        </v-container>
       </v-card>
-      <v-card width="80vw" color="secondary" height="85vh" class="d-none align-center flex-column" id="quizEdit" elevation="12">
+      <v-card width="80vw"  height="85vh" class="d-none align-center flex-column" id="quizEdit" elevation="12">
         <v-toolbar color="primary" title="Quiz">  
           <v-text-field
             v-model="returnedData.QuizName"
@@ -168,30 +170,32 @@ import AxiosGet from "../JavaScript/AxiosGet.js";
             class="mr-4"
           ></v-text-field>
         </v-toolbar> 
-        <v-card width="80vw" height="80vh" style="background-color: rgba(255, 255, 255, 0) !important; border-color: white !important" class="mt-5 mb-4 overflow-y-auto">
-          <v-expansion-panels >
-            <QuestionCard class="fill-height mt-3" v-for="(item, index) in returnedData.Questions" :key="item.title" cols="auto"
-              :updateQuestion="UpdateQuestion"
-              :removeQuestion="RemoveQuestion"
-              :question="item.Question"
-              :index="index"
-              :type="item.Type"
-              :answerRating="item.AnswerRating"
-              :answers="item.Answers"
-            ></QuestionCard>
-            <v-btn v-on:click="AddQuestion" class="mt-8 mb-5" color="button"><v-icon class="mr-2" icon="mdi-plus-circle-outline"></v-icon> Add Question</v-btn>
-          </v-expansion-panels>
-        </v-card> 
-        <v-container class="d-flex flex-row align-center justify-center">
-          <v-btn v-if="mode==0" value="submit" :disabled="loading" :loading="loading" v-on:click="CreateQuiz" class="mt-4 mb-2 text-h3" height="auto" color="button">
-            Create Quiz
-          </v-btn>
-          <v-btn v-else value="submit" :disabled="loading" :loading="loading" v-on:click="EditQuiz" class="mt-4 mb-2 text-h3" height="auto" color="button">
-            Edit Quiz
-          </v-btn>
-          <v-switch v-model="public" class="ml-8 mt-6" width="10vw" label="Public" color="button"></v-switch>
+        <v-container width="75vw" class="d-flex align-center flex-column">
+          <v-card width="75vw"  height="60vh" elevation="0" id="BgTransparent"  class="mt-5 mb-4 pl-4 pr-4 overflow-y-auto">
+            <v-expansion-panels >
+              <QuestionCard class="fill-height mt-3" v-for="(item, index) in returnedData.Questions" :key="item.title" cols="auto"
+                :updateQuestion="UpdateQuestion"
+                :removeQuestion="RemoveQuestion"
+                :question="item.Question"
+                :index="index"
+                :type="item.Type"
+                :answerRating="item.AnswerRating"
+                :answers="item.Answers"
+              ></QuestionCard>
+              <v-btn v-on:click="AddQuestion" class="mt-8 mb-5" color="button"><v-icon class="mr-2" icon="mdi-plus-circle-outline"></v-icon> Add Question</v-btn>
+            </v-expansion-panels>
+          </v-card> 
+          <v-container class="d-flex flex-row align-center justify-center">
+            <v-btn v-if="mode==0" value="submit" :disabled="loading" :loading="loading" v-on:click="CreateQuiz" class="mt-4 mb-2 text-h3" height="auto" color="button">
+              Create Quiz
+            </v-btn>
+            <v-btn v-else value="submit" :disabled="loading" :loading="loading" v-on:click="EditQuiz" class="mt-4 mb-2 text-h3" height="auto" color="button">
+              Edit Quiz
+            </v-btn>
+            <v-switch v-model="public" class="ml-8 mt-6" width="10vw" label="Public" color="button"></v-switch>
+          </v-container>
+          <p class="mb-3">{{ loadingMessage }}</p>
         </v-container>
-        <p class="mb-3">{{ loadingMessage }}</p>
       </v-card>
     </v-main>
     <input id="update" v-model="update" type="bool">
@@ -404,13 +408,20 @@ export default {
 };
 </script>
 <style scoped>
-.questionContainer {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  position: absolute; 
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-}
+  .questionContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: absolute; 
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  #Background {
+      background: url('../assets/bg_login_modified_dark.jpg') no-repeat center center fixed !important;
+   }      
+   #BgTransparent,#quizCreate,#quizEdit{
+    background-color: #3e3e3ed5;
+   }  
 </style>
