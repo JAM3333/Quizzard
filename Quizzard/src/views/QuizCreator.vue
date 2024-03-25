@@ -361,7 +361,7 @@ export default {
         this.mode = 1;
         this.quizID = this.$route.params.quizID;
         this.SwitchPage();
-        var sqlData = await AxiosGet(`select * from Quizzes where QuizID=`+this.quizID);
+        var sqlData = await AxiosGet(`select * from Quizzes where QuizID=${this.quizID} and UserIDFK=1`);
         if (sqlData[0].UserIDFK == 1){
           sqlData = sqlData[0]
           this.quizName = sqlData.QuizName;
@@ -377,8 +377,9 @@ export default {
            // let obj =  {  "Question": sqlData[i].Question,"Type": sqlData[i].QuestionType,"AnswerRating":  sqlData[i].AnswerRating,"Answers": JSON.parse(sqlData[i].Answers)};
             this.returnedData.Questions[i] = new QuestionClass(sqlData[i].Question,sqlData[i].QuestionType,sqlData[i].AnswerRatingm,JSON.parse(sqlData[i].Answers));
           }
+        } else {
+          this.$router.push({ name: 'Home'});
         }
-          
         console.log(this.returnedData)
         this.update = true;
         this.update = false;
