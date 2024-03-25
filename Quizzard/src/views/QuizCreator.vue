@@ -160,7 +160,7 @@ import AxiosGet from "../JavaScript/AxiosGet.js";
           </v-btn>
         </v-container>
       </v-card>
-      <v-card width="80vw"  height="85vh" class="d-none align-center flex-column" id="quizEdit" elevation="12">
+      <v-card width="80vw"  height="fit-content" class="d-none align-center flex-column" id="quizEdit" elevation="12">
         <v-toolbar color="primary" title="Quiz">  
           <v-text-field
             v-model="returnedData.QuizName"
@@ -171,7 +171,7 @@ import AxiosGet from "../JavaScript/AxiosGet.js";
           ></v-text-field>
         </v-toolbar> 
         <v-container width="75vw" class="d-flex align-center flex-column">
-          <v-card width="75vw"  height="60vh" elevation="0" id="BgTransparent"  class="mt-5 mb-4 pl-4 pr-4 overflow-y-auto">
+          <v-card width="75vw"  height="55vh" elevation="0" id="BgTransparent"  class="mt-5 pl-4 pr-4 overflow-y-auto">
             <v-expansion-panels >
               <QuestionCard class="fill-height mt-3" v-for="(item, index) in returnedData.Questions" :key="item.title" cols="auto"
                 :updateQuestion="UpdateQuestion"
@@ -185,17 +185,19 @@ import AxiosGet from "../JavaScript/AxiosGet.js";
               <v-btn v-on:click="AddQuestion" class="mt-8 mb-5" color="button"><v-icon class="mr-2" icon="mdi-plus-circle-outline"></v-icon> Add Question</v-btn>
             </v-expansion-panels>
           </v-card> 
-          <v-container class="d-flex flex-row align-center justify-center">
-            <v-btn v-if="mode==0" value="submit" :disabled="loading" :loading="loading" v-on:click="CreateQuiz" class="mt-4 mb-2 text-h3" height="auto" color="button">
-              Create Quiz
-            </v-btn>
-            <v-btn v-else value="submit" :disabled="loading" :loading="loading" v-on:click="EditQuiz" class="mt-4 mb-2 text-h3" height="auto" color="button">
-              Edit Quiz
-            </v-btn>
-            <v-switch v-model="public" class="ml-8 mt-6" width="10vw" label="Public" color="button"></v-switch>
+          <v-container class="d-flex flex-column align-center justify-center flex-shrink-1"  >
+            <v-container width="fit-content" class="d-flex flex-row align-center justify-center">
+              <v-btn v-if="mode==0" value="submit" :disabled="loading" :loading="loading" v-on:click="CreateQuiz" class="mt-4  text-h3" height="auto" color="button">
+                Create Quiz
+              </v-btn>
+              <v-btn v-else value="submit" :disabled="loading" :loading="loading" v-on:click="EditQuiz" class="mt-4 mb-2 text-h3" height="auto" color="button">
+                Edit Quiz
+              </v-btn>
+              <v-card style="background-color: rgba(0,0,0,0)" class="d-flex align-center justify-center" elevation="0"><v-switch v-model="public" label="Public" class="mt-8 ml-5" color="button"></v-switch></v-card>
+            </v-container>
+            <p class="mb-3">{{ loadingMessage }}</p>
           </v-container>
-          <p class="mb-3">{{ loadingMessage }}</p>
-        </v-container>
+        </v-container>         
       </v-card>
     </v-main>
     <input id="update" v-model="update" type="bool">
