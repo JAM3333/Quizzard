@@ -8,7 +8,7 @@
 <!-- Website for icons: https://pictogrammers.com/library/mdi/ -->
     <v-list density="compact" class="d-flex justify space-between flex-column" nav>
         <v-list-item prepend-icon="mdi-plus-circle-outline" title="Create Quiz" value="CreateQuiz" :to="{path: '/quizcreator'}"></v-list-item>
-      <v-list-item prepend-icon="mdi-magnify" title="Discover" value="discover" :to="{path: '/home'}"></v-list-item>
+      <v-list-item prepend-icon="mdi-magnify" title="Discover" value="discover" :to="{path: '/discover'}"></v-list-item>
       <v-list-item prepend-icon="mdi-folder" title="My Quizzes" value="myQuiz" :to="{path: '/home'}"></v-list-item>
     </v-list>
     <template v-slot:append>

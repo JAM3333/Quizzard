@@ -136,9 +136,9 @@ import AxiosGet from "../JavaScript/AxiosGet.js";
                   group
                   mandatory
                 >
-                  <v-btn value="content"> Content (AI) </v-btn>
+                  <v-btn value=0> Content (AI) </v-btn>
 
-                  <v-btn value="exact"> Exact (Wording) </v-btn>
+                  <v-btn value=1> Exact (Wording) </v-btn>
                 </v-btn-toggle>
               </v-card>
             </v-expansion-panel-text>
@@ -179,14 +179,18 @@ import AxiosGet from "../JavaScript/AxiosGet.js";
               :answerRating="item.AnswerRating"
               :answers="item.Answers"
             ></QuestionCard>
+            <v-btn v-on:click="AddQuestion" class="mt-8 mb-5" color="button"><v-icon class="mr-2" icon="mdi-plus-circle-outline"></v-icon> Add Question</v-btn>
           </v-expansion-panels>
         </v-card> 
-        <v-btn v-if="mode==0" value="submit" :disabled="loading" :loading="loading" v-on:click="CreateQuiz" class="mt-4 mb-2 text-h3" height="auto" color="button">
-          Create Quiz
-        </v-btn>
-        <v-btn v-else value="submit" :disabled="loading" :loading="loading" v-on:click="EditQuiz" class="mt-4 mb-2 text-h3" height="auto" color="button">
-          Edit Quiz
-        </v-btn>
+        <v-container class="d-flex flex-row align-center justify-center">
+          <v-btn v-if="mode==0" value="submit" :disabled="loading" :loading="loading" v-on:click="CreateQuiz" class="mt-4 mb-2 text-h3" height="auto" color="button">
+            Create Quiz
+          </v-btn>
+          <v-btn v-else value="submit" :disabled="loading" :loading="loading" v-on:click="EditQuiz" class="mt-4 mb-2 text-h3" height="auto" color="button">
+            Edit Quiz
+          </v-btn>
+          <v-switch v-model="public" class="ml-8 mt-6" width="10vw" label="Public" color="button"></v-switch>
+        </v-container>
         <p class="mb-3">{{ loadingMessage }}</p>
       </v-card>
     </v-main>
@@ -210,8 +214,9 @@ export default {
     quizID: -1,
     fileData: [],
     customInstructions: "",
+    public: false,
     difSelectedButton: "medium",
-    answerSelectedButton: "content",
+    answerSelectedButton: 0, //ai=0; exact=1
     sliderMultipleChoice: 2,
     sliderText: 8,
     sliderMin: 0,
@@ -220,10 +225,9 @@ export default {
     returnedData: 
       {"QuizName": "Your Quiz Name",
       "QuizDifficulty": 0, // easy=0; medium=1; difficult=2
-      "AnswerRating": 0, // KI=0; Formulierung=1
       "QuizImage": "image.png",
       "Questions": []
-    }
+    },
   }),
   methods: {
     ReadFiles() {
@@ -250,14 +254,13 @@ export default {
       async function main() {
         this.loadingMessage = "Sending prompt...";
         const completion = await openai.chat.completions.create({
-          messages: [{ role: "system", content: `Generate a quiz from the attached file and the following instructions: ${this.customInstructions}. Create ${this.sliderText} Text-Questions and ${sliderMultipleChoice} Multiple-choice-questions with a difficulty of ${this.difSelectedButton} using the following json format (Example):   {"QuizName": "Name",
+          messages: [{ role: "system", content: `Generate a quiz from the attached file and the following instructions: ${this.customInstructions}. Create ${this.sliderText} Text-Questions and ${this.sliderMultipleChoice} Multiple-choice-questions with a difficulty of ${this.difSelectedButton} using the following json format (Example):   {"QuizName": "Name",
       "QuizDifficulty": 0, // easy=0; medium=1; difficult=2
-      "AnswerRating": 0, // KI=0; Formulierung=1
       "QuizImage": "image.png",
       "Questions": [
         {
-          "Question": "Frage 1?",
-          "Type": 1, // Mehrfachauswahl = 1
+          "Question": "Multiple-Choice?",
+          "Type": 1, // MultipleChoice = 1
           "AnswerRating": 3, // Richtige Antwort ist Answer 3
           "Answers": {
             "1": "Salz",
@@ -267,9 +270,9 @@ export default {
           }
         },
         {
-          "Question": "Frage 2?",
-          "Type": 0, // Textantwort = 0
-          "AnswerRating": 0,
+          "Question": "Text-Question?",
+          "Type": 0, // Text = 0
+          "AnswerRating": ${this.answerSelectedButton}, // always use this with Text-Questions
           "Answers": {
             "1": "Viel Wasser"
           }
@@ -305,6 +308,7 @@ export default {
       this.loading = true
       this.loadingMessage = "Generating Quiz...";
       this.quizName = this.returnedData.QuizName;    
+      this.returnedData.AnswerRating = parseInt(this.answerSelectedButton)
       this.returnedData.Questions.push(new QuestionClass("Wie backt man Fisch?",1,3,["Salz","Zucker","Backsoda","Wasser"]));   
       this.returnedData.Questions.push(new QuestionClass("Mit was sollte man Fisch backen?",0,1,["Salz"]));   
       //this.uploadFile();
@@ -318,15 +322,29 @@ export default {
         console.log(this.returnedData)
         this.loading = true;
         this.loadingMessage = "Creating Quiz...";
-        var insertData = await AxiosGet(`insert into Quizzes (UserIDFK,QuizName,QuizDifficulty,AnswerRating,QuizImage) VALUES (1,'${this.returnedData.QuizName}',${this.returnedData.QuizDifficulty},${this.returnedData.AnswerRating},'https://th.bing.com/th/id/R.385e7dbec0e6c313cfd6dc3b6fff1c95?rik=Ps5ZHpTWtX4y3A&pid=ImgRaw&r=0');`)
+        var insertData = await AxiosGet(`insert into Quizzes (UserIDFK,QuizName,QuizDifficulty,AnswerRating,Public,QuizImage) VALUES (1,'${this.returnedData.QuizName}',${this.returnedData.QuizDifficulty},${this.returnedData.AnswerRating},${this.public},'https://th.bing.com/th/id/R.385e7dbec0e6c313cfd6dc3b6fff1c95?rik=Ps5ZHpTWtX4y3A&pid=ImgRaw&r=0');`)
         //var insertData = await this.ApiGet(`insert into Quizzes (UserIDFK,QuizName,QuizDifficulty,AnswerRating,QuizImage) VALUES (1,'${this.returnedData.QuizName}',${this.returnedData.QuizDifficulty},${this.returnedData.AnswerRating},'https://th.bing.com/th/id/R.385e7dbec0e6c313cfd6dc3b6fff1c95?rik=Ps5ZHpTWtX4y3A&pid=ImgRaw&r=0');`)
         for (let i=0;i<this.returnedData.Questions.length;i++){
           this.loadingMessage = "Creating Question "+(parseInt(i)+1)+"...";
+          this.returnedData.Questions[i].AnswerRating
           await AxiosGet(`insert into Questions (QuizIDFK,Question,QuestionType,AnswerRating,Answers) VALUES (${insertData.insertId},'${this.returnedData.Questions[i].Question}',${this.returnedData.Questions[i].Type},${this.returnedData.Questions[i].AnswerRating},'${this.returnedData.Questions[i].Answers}');`)
         } 
         this.loading = false
         this.$router.push({ name: 'Home'});
-      } 
+      } else {
+        console.log(this.returnedData)
+        this.loading = true;
+        this.loadingMessage = "Creating Quiz...";
+        var insertData = await AxiosGet(`insert into Quizzes (UserIDFK,QuizName,QuizDifficulty,AnswerRating,Public,QuizImage) VALUES (1,'${this.returnedData.QuizName}',${this.returnedData.QuizDifficulty},${this.returnedData.AnswerRating},${this.public},'https://th.bing.com/th/id/R.385e7dbec0e6c313cfd6dc3b6fff1c95?rik=Ps5ZHpTWtX4y3A&pid=ImgRaw&r=0');`)
+        //var insertData = await this.ApiGet(`insert into Quizzes (UserIDFK,QuizName,QuizDifficulty,AnswerRating,QuizImage) VALUES (1,'${this.returnedData.QuizName}',${this.returnedData.QuizDifficulty},${this.returnedData.AnswerRating},'https://th.bing.com/th/id/R.385e7dbec0e6c313cfd6dc3b6fff1c95?rik=Ps5ZHpTWtX4y3A&pid=ImgRaw&r=0');`)
+        for (let i=0;i<this.returnedData.Questions.length;i++){
+          this.loadingMessage = "Creating Question "+(parseInt(i)+1)+"...";
+          this.returnedData.Questions[i].AnswerRating
+          await AxiosGet(`insert into Questions (QuizIDFK,Question,QuestionType,AnswerRating,Answers) VALUES (${insertData.insertId},'${this.returnedData.Questions[i].Question}',${this.returnedData.Questions[i].Type},${this.returnedData.Questions[i].AnswerRating},'${this.returnedData.Questions[i].Answers}');`)
+        } 
+        this.loading = false
+        this.$router.push({ name: 'Home'});
+      }
     },
     async EditQuiz(){
 
@@ -347,6 +365,7 @@ export default {
         if (sqlData[0].UserIDFK == 1){
           sqlData = sqlData[0]
           this.quizName = sqlData.QuizName;
+          this.public = sqlData.Public;
           this.returnedData.QuizName = sqlData.QuizName;
           console.log(sqlData.QuizName);
           console.log(this.returnedData.QuizName)
@@ -355,30 +374,30 @@ export default {
           this.returnedData.QuizImage = sqlData.QuizImage;
           sqlData = await AxiosGet( `select * from Questions where QuizIDFK=`+this.quizID);
           for (let i=0;i<sqlData.length;i++){
-            let obj =  {  "Question": sqlData[i].Question,
-                          "Type": sqlData[i].QuestionType,
-                          "AnswerRating":  sqlData[i].AnswerRating,
-                          "Answers": JSON.parse(sqlData[i].Answers)};
-            this.returnedData.Questions[i] = obj;
+           // let obj =  {  "Question": sqlData[i].Question,"Type": sqlData[i].QuestionType,"AnswerRating":  sqlData[i].AnswerRating,"Answers": JSON.parse(sqlData[i].Answers)};
+            this.returnedData.Questions[i] = new QuestionClass(sqlData[i].Question,sqlData[i].QuestionType,sqlData[i].AnswerRatingm,JSON.parse(sqlData[i].Answers));
           }
-     
         }
           
         console.log(this.returnedData)
         this.update = true;
         this.update = false;
       } else {
-        this.mode=0;
+        this.mode = 0;
       };
     },
-    UpdateQuestion(index,question,answerRating,answers){
+    UpdateQuestion(index,question,answerRating){
       this.returnedData.Questions[index].Question = question;
       this.returnedData.Questions[index].AnswerRating = answerRating;
-      this.returnedData.Questions[index].Answers = answers;
-      console.log(answers)
     },
     RemoveQuestion(index){
       this.returnedData.Questions.splice(index,1);
+    },
+    AddQuestion(){
+      this.returnedData.Questions.push(new QuestionClass("",0,this.returnedData.AnswerRating,[""]));   
+    },
+    ReturnAnswerData(){
+
     }
   },
 };
