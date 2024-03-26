@@ -175,6 +175,7 @@ import AxiosGet from "../JavaScript/AxiosGet.js";
             <v-expansion-panels >
               <QuestionCard class="fill-height mt-3" v-for="(item, index) in returnedData.Questions" :key="item.title" cols="auto"
                 :updateQuestion="UpdateQuestion"
+                :returnAnswerData="ReturnAnswerData"
                 :removeQuestion="RemoveQuestion"
                 :question="item.Question"
                 :index="index"
@@ -366,6 +367,7 @@ export default {
       if(this.$route.params.quizID){
         this.mode = 1;
         this.quizID = this.$route.params.quizID;
+        this.returnedData.AnswerRating = 0;
         this.SwitchPage();
         var sqlData = await AxiosGet(`select * from Quizzes where QuizID=${this.quizID} and UserIDFK=1`);
         if (sqlData[0].UserIDFK == 1){
@@ -393,9 +395,19 @@ export default {
         this.mode = 0;
       };
     },
-    UpdateQuestion(index,question,answerRating){
+    async UpdateQuestion(index,question,answerRating,type){
       this.returnedData.Questions[index].Question = question;
       this.returnedData.Questions[index].AnswerRating = answerRating;
+      if (this.returnedData.Questions[index].Type != type){
+        this.returnedData.Questions[index].Type = type;
+        if (type == 0){
+          this.returnedData.Questions[index].AnswerRating = parseInt(this.answerSelectedButton);
+          this.returnedData.Questions[index].Answers = [this.returnedData.Questions[index].Answers[0]]
+        } else {
+          this.returnedData.Questions[index].AnswerRating = 1;
+          this.returnedData.Questions[index].Answers = [this.returnedData.Questions[index].Answers[0],"","",""]
+        }
+      }
     },
     RemoveQuestion(index){
       this.returnedData.Questions.splice(index,1);
@@ -403,8 +415,8 @@ export default {
     AddQuestion(){
       this.returnedData.Questions.push(new QuestionClass("",0,this.returnedData.AnswerRating,[""]));   
     },
-    ReturnAnswerData(){
-
+    async ReturnAnswerData(index,answers){
+      this.returnedData.Questions[index].Answers = answers;
     }
   },
 };
